@@ -1,15 +1,16 @@
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
+import { ReactElement } from 'react';
 
 interface Props {
-  styleTags: unknown;
+  styleTags: React.ReactNode;
 }
 
 export default class MyDocument extends Document<Props> {
-  static getInitialProps({ renderPage }) {
+  static getInitialProps({ renderPage }: any) {
     const sheet = new ServerStyleSheet();
 
-    const page = renderPage((App) => (props) =>
+    const page = renderPage((App: React.FC) => (props: ReactElement) =>
       sheet.collectStyles(<App {...props} />)
     );
 
