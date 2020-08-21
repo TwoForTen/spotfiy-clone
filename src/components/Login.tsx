@@ -1,14 +1,13 @@
 import styled, { DefaultTheme } from 'styled-components';
 import Button from 'src/components/StyledButton';
 
-interface StyleProps {
+interface ThemeProp {
   theme: DefaultTheme;
 }
 
 const Background = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: ${({ theme }: StyleProps) => theme.colors.common.black};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,7 +28,7 @@ const Background = styled.div`
 `;
 
 const Title = styled.h2`
-  color: ${({ theme }: StyleProps) => theme.colors.common.white};
+  color: ${({ theme }: ThemeProp) => theme.colors.common.white};
   z-index: 1;
 `;
 

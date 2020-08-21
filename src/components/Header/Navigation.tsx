@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import { StyleProps } from 'src/interfaces/StyleProps';
+import { ThemeProp } from 'src/interfaces/ThemeProp';
 
 const StyledNavigation = styled.div`
   display: flex;
@@ -9,13 +9,13 @@ const StyledNavigation = styled.div`
 const StyledHeaderButton = styled.button`
   width: fit-content;
   height: fit-content;
-  padding: 2px;
+  padding: 1px;
   margin: 0px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: ${({ theme }: StyleProps) => theme.colors.common.black};
+  background-color: ${({ theme }: ThemeProp) => theme.colors.common.black};
 `;
 
 const Navigation: React.FC = (): JSX.Element => {

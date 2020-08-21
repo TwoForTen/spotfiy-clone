@@ -22,5 +22,15 @@ export const theme: DefaultTheme = {
   },
   shape: {
     borderRadius: 5,
+    ui: {
+      sidebar: {
+        height: '100vh',
+        width: '232px',
+      },
+      header: {
+        height: '60px',
+        width: '100%',
+      },
+    },
   },
 };

@@ -1,13 +1,15 @@
 import styled from 'styled-components';
-import { StyleProps } from 'src/interfaces/StyleProps';
+import { ThemeProp } from 'src/interfaces/ThemeProp';
 
 const Header = styled.header`
-  width: 100%;
-  height: 60px;
+  width: ${({ theme }: ThemeProp) =>
+    `calc(${theme.shape.ui.header.width} - ${theme.shape.ui.sidebar.width})`};
+  height: ${({ theme }: ThemeProp) => theme.shape.ui.header.height};
   position: fixed;
+  right: 0;
   opacity: 1;
-  background-color: ${({ theme }: StyleProps) => theme.colors.ui.header};
-  color: ${({ theme }: StyleProps) => theme.colors.common.white};
+  background-color: ${({ theme }: ThemeProp) => theme.colors.ui.header};
+  color: ${({ theme }: ThemeProp) => theme.colors.common.white};
   display: flex;
   justify-content: space-between;
   align-items: center;

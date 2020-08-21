@@ -22,6 +22,16 @@ declare module 'styled-components' {
     };
     shape: {
       borderRadius: number;
+      ui: {
+        sidebar: {
+          height: string;
+          width: string;
+        };
+        header: {
+          height: string;
+          width: string;
+        };
+      };
     };
   }
 }

@@ -6,12 +6,12 @@ interface Props {
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-interface StyleProps extends Props {
+interface ThemeProp extends Props {
   theme: DefaultTheme;
 }
 
 const Button = styled.button`
-  ${({ theme, primary, secondary }: StyleProps) => css`
+  ${({ theme, primary, secondary }: ThemeProp) => css`
     border: none;
     outline: none;
     padding: 10px;
