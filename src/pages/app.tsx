@@ -19,15 +19,15 @@ const SpotifyApp: NextPage = (): JSX.Element | null => {
   useEffect(() => {
     if (!!!accessToken) {
       router.push('/');
+    } else {
+      axios
+        .get('https://api.spotify.com/v1/me', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((res) => console.log(res.data));
     }
-
-    axios
-      .get('https://api.spotify.com/v1/me', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then((res) => console.log(res.data));
   }, [accessToken]);
 
   if (!!!accessToken) return null;
