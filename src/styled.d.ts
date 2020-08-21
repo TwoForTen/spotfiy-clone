@@ -11,6 +11,7 @@ declare module 'styled-components' {
       common: {
         white: string;
         black: string;
+        faded: string;
       };
       ui: {
         header: string;
@@ -21,7 +22,7 @@ declare module 'styled-components' {
       };
     };
     shape: {
-      borderRadius: number;
+      borderRadius: string;
       ui: {
         sidebar: {
           height: string;

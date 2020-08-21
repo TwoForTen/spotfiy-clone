@@ -11,6 +11,7 @@ export const theme: DefaultTheme = {
     common: {
       white: '#FFFFFF',
       black: '#000000',
+      faded: '#282828',
     },
     ui: {
       header: '#070707',
@@ -21,7 +22,7 @@ export const theme: DefaultTheme = {
     },
   },
   shape: {
-    borderRadius: 5,
+    borderRadius: '5px',
     ui: {
       sidebar: {
         height: '100vh',

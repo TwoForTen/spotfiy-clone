@@ -19,7 +19,7 @@ const Button = styled.button`
     min-width: 120px;
     color: ${theme.colors.common.white};
     font-size: 20px;
-    border-radius: ${theme.shape.borderRadius + 'px'};
+    border-radius: ${theme.shape.borderRadius};
     background-color: ${primary
       ? theme.colors.primary.main
       : secondary && theme.colors.common.black};
