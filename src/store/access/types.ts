@@ -1,14 +1,16 @@
-export const STORE_USER = 'STORE_USER';
+export const STORE_ACCESS = 'STORE_ACCESS';
 
-export interface UserState {
+export interface AccessState {
   access_token: string;
-  token_type: string;
   expires_in: number;
+  refresh_token: string;
+  scope: string;
+  token_type: string;
 }
 
-interface StoreUserAction {
-  type: typeof STORE_USER;
-  payload: UserState;
+interface storeAccessAction {
+  type: typeof STORE_ACCESS;
+  payload: AccessState;
 }
 
-export type AccessActions = StoreUserAction;
+export type AccessActions = storeAccessAction;

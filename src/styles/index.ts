@@ -16,4 +16,18 @@ export const GlobalStyle: GlobalStyleComponent<
     html{
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     }
+    body{
+      background-color: #121212;
+    }
+    button{
+      border: none;
+  outline: none;
+    }
+    a{
+      color: initial;
+      text-decoration: none;
+    }
+    ul{
+      list-style: none;
+    }
 `;

@@ -12,6 +12,13 @@ declare module 'styled-components' {
         white: string;
         black: string;
       };
+      ui: {
+        header: string;
+        sidebar: string;
+        background: string;
+        card: string;
+        text: string;
+      };
     };
     shape: {
       borderRadius: number;

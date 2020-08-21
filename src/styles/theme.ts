@@ -10,7 +10,14 @@ export const theme: DefaultTheme = {
     },
     common: {
       white: '#FFFFFF',
-      black: '#191414',
+      black: '#000000',
+    },
+    ui: {
+      header: '#070707',
+      sidebar: '#030303',
+      background: '#121212',
+      card: '#262626',
+      text: '#b3b3b3',
     },
   },
   shape: {

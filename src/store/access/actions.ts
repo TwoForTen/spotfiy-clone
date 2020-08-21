@@ -1,8 +1,8 @@
-import { STORE_USER, UserState, AccessActions } from './types';
+import { STORE_ACCESS, AccessState, AccessActions } from './types';
 
-export const storeUser = (payload: UserState): AccessActions => {
+export const storeAccess = (payload: AccessState): AccessActions => {
   return {
-    type: STORE_USER,
+    type: STORE_ACCESS,
     payload,
   };
 };

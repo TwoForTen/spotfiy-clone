@@ -1,21 +1,25 @@
-import { STORE_USER, UserState, AccessActions } from './types';
+import { STORE_ACCESS, AccessState, AccessActions } from './types';
 
-const initialState: UserState = {
+const initialState: AccessState = {
   access_token: '',
-  token_type: '',
   expires_in: 0,
+  refresh_token: '',
+  scope: '',
+  token_type: '',
 };
 
 export const accessReducer = (
   state = initialState,
   action: AccessActions
-): UserState => {
+): AccessState => {
   switch (action.type) {
-    case STORE_USER:
+    case STORE_ACCESS:
       return {
         access_token: action.payload.access_token,
+        expires_in: action.payload.expires_in,
+        refresh_token: action.payload.refresh_token,
+        scope: action.payload.scope,
         token_type: action.payload.token_type,
-        expires_in: +action.payload.expires_in,
       };
     default:
       return state;
