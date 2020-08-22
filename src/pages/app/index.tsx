@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import cookies from 'next-cookies';
+import axios from 'src/axiosInstance';
 
 import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
@@ -28,8 +29,6 @@ const SpotifyApp: NextPage<Props> = ({
   playlists,
 }): JSX.Element | null => {
   const router = useRouter();
-
-  console.log(playlists);
 
   useEffect(() => {
     if (!!!display_name) {
@@ -57,23 +56,15 @@ SpotifyApp.getInitialProps = async (
   let display_name: string = '';
   let playlists: Playlists = [];
 
-  await axios
-    .get('https://api.spotify.com/v1/me', {
-      headers: {
-        Authorization: cookie && `${cookie.token_type} ${cookie.access_token}`,
-      },
-    })
+  await axios(cookie.access_token)
+    .get('/me')
     .then((res) => {
       display_name = res.data.display_name;
     })
-    .catch((e) => console.log(e.response.data));
+    .catch(() => {});
 
-  await axios
-    .get('https://api.spotify.com/v1/me/playlists', {
-      headers: {
-        Authorization: cookie && `${cookie.token_type} ${cookie.access_token}`,
-      },
-    })
+  await axios(cookie.access_token)
+    .get('/me/playlists')
     .then(
       (res) =>
         (playlists = res.data.items.map((item: any) => {
@@ -83,7 +74,8 @@ SpotifyApp.getInitialProps = async (
             name: item.name,
           };
         }))
-    );
+    )
+    .catch(() => {});
 
   return { display_name, playlists };
 };
