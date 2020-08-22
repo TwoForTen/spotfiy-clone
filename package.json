@@ -11,9 +11,12 @@
   "dependencies": {
     "@types/react-redux": "^7.1.9",
     "axios": "^0.19.2",
+    "moment": "^2.27.0",
     "next": "^9.5.2",
+    "next-cookies": "^2.0.3",
     "polished": "^3.6.5",
     "react": "^16.13.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.1",
     "reduxt": "^0.0.5",

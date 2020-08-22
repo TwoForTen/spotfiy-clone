@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import { useCookies } from 'react-cookie';
 
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 
@@ -30,11 +31,19 @@ const MenuLink = styled.li`
 
 const UserDropdown: React.FC = (): JSX.Element => {
   const router = useRouter();
+  const [_, __, removeCookie] = useCookies();
   return (
     <StyledUserDropdown>
       <ul>
         <MenuLink>Profile</MenuLink>
-        <MenuLink onClick={() => router.replace('/')}>Log out</MenuLink>
+        <MenuLink
+          onClick={() => {
+            removeCookie('access');
+            router.replace('/');
+          }}
+        >
+          Log out
+        </MenuLink>
       </ul>
     </StyledUserDropdown>
   );

@@ -5,8 +5,9 @@ import { useDispatch } from 'react-redux';
 import querystring from 'querystring';
 import axios from 'axios';
 import Login from 'src/components/Login';
-
-import { storeAccess } from 'src/store/access/actions';
+import cookies from 'next-cookies';
+import { useCookies } from 'react-cookie';
+import moment from 'moment';
 
 interface AccessResponse {
   accessResponse: {
@@ -21,13 +22,18 @@ interface AccessResponse {
 const Home: NextPage<AccessResponse> = ({
   accessResponse,
 }): JSX.Element | null => {
-  const dispatch = useDispatch();
   const router = useRouter();
+
+  const [_, setCookie] = useCookies(['access']);
 
   useEffect(() => {
     if (!!accessResponse) {
-      dispatch(storeAccess({ ...accessResponse }));
-      router.push('/app');
+      setCookie('access', JSON.stringify(accessResponse), {
+        expires: moment(new Date())
+          .add(accessResponse.expires_in, 's')
+          .toDate(),
+      });
+      router.push(`/app?access=${JSON.stringify(accessResponse)}`, '/app');
     }
   }, []);
 
@@ -41,7 +47,11 @@ Home.getInitialProps = async (
 ): Promise<AccessResponse> => {
   const client_id: string = 'e201e606a545454ebf802153eee4e83d';
   const client_secret: string = '82b44aa31c764894b3030fd0f1555591';
-  let accessResponse = null;
+  let accessResponse: any = null;
+
+  if (context.req?.headers.cookie) {
+    accessResponse = cookies(context).access;
+  }
 
   context.query?.code &&
     (await axios
