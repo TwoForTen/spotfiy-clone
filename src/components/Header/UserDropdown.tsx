@@ -31,7 +31,7 @@ const MenuLink = styled.li`
 
 const UserDropdown: React.FC = (): JSX.Element => {
   const router = useRouter();
-  const [_, __, removeCookie] = useCookies();
+  const [, , removeCookie] = useCookies();
   return (
     <StyledUserDropdown>
       <ul>

@@ -24,7 +24,7 @@ const Home: NextPage<AccessResponse> = ({
 }): JSX.Element | null => {
   const router = useRouter();
 
-  const [_, setCookie] = useCookies(['access']);
+  const [, setCookie] = useCookies(['access']);
 
   useEffect(() => {
     if (!!accessResponse) {

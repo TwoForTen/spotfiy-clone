@@ -1,7 +1,14 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+
+import { Playlists } from 'src/pages/app';
+
+interface Props {
+  playlists: Playlists;
+}
 
 interface StyleProps extends ThemeProp {
   selected?: boolean;
@@ -46,6 +53,17 @@ const Divider = styled.hr`
 const PlaylistsTitle = styled.h6`
   color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
   font-size: 13px;
+  margin-bottom: 16px;
+`;
+
+const PlaylistsList = styled.li`
+  color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
+  font-size: 13px;
+  padding: 8px 0;
+  font-weight: 400;
+  &:hover {
+    color: ${({ theme }: ThemeProp) => theme.colors.common.white};
+  }
 `;
 
 const links: Links = [
@@ -103,21 +121,18 @@ const links: Links = [
   },
 ];
 
-const NavLinks: React.FC = (): JSX.Element => {
-  const [selected, setSelected] = useState<number>(0);
+const NavLinks: React.FC<Props> = ({ playlists }): JSX.Element => {
+  const router = useRouter();
 
   return (
     <>
       <Nav>
-        {links.map((link, index) => {
+        {links.map((link) => {
           const { title, to, icon } = link;
           return (
             <Link key={title} href={to}>
               <a>
-                <NavLink
-                  selected={selected === index}
-                  onClick={() => setSelected(index)}
-                >
+                <NavLink selected={router.pathname === to}>
                   {icon} <span>{title}</span>
                 </NavLink>
               </a>
@@ -128,6 +143,17 @@ const NavLinks: React.FC = (): JSX.Element => {
       <Padding>
         <Divider />
         <PlaylistsTitle>PLAYLISTS</PlaylistsTitle>
+        <ul>
+          {playlists.map((playlist) => {
+            return (
+              <Link key={playlist.id} href={playlist.id}>
+                <a>
+                  <PlaylistsList>{playlist.name}</PlaylistsList>
+                </a>
+              </Link>
+            );
+          })}
+        </ul>
       </Padding>
     </>
   );

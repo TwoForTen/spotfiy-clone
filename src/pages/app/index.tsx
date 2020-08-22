@@ -9,6 +9,7 @@ import Sidebar from 'src/components/Sidebar';
 
 interface Props {
   display_name: string;
+  playlists: Playlists;
 }
 
 interface Cookie {
@@ -16,8 +17,19 @@ interface Cookie {
   token_type: string;
 }
 
-const SpotifyApp: NextPage<Props> = ({ display_name }): JSX.Element | null => {
+export type Playlists = {
+  id: string;
+  href: string;
+  name: string;
+}[];
+
+const SpotifyApp: NextPage<Props> = ({
+  display_name,
+  playlists,
+}): JSX.Element | null => {
   const router = useRouter();
+
+  console.log(playlists);
 
   useEffect(() => {
     if (!!!display_name) {
@@ -30,7 +42,7 @@ const SpotifyApp: NextPage<Props> = ({ display_name }): JSX.Element | null => {
   return (
     <>
       <Header username={display_name} />
-      <Sidebar />
+      <Sidebar playlists={playlists} />
     </>
   );
 };
@@ -43,6 +55,7 @@ SpotifyApp.getInitialProps = async (
     (context.query.access && JSON.parse(`${context.query.access}`)) ||
     '';
   let display_name: string = '';
+  let playlists: Playlists = [];
 
   await axios
     .get('https://api.spotify.com/v1/me', {
@@ -55,7 +68,24 @@ SpotifyApp.getInitialProps = async (
     })
     .catch((e) => console.log(e.response.data));
 
-  return { display_name };
+  await axios
+    .get('https://api.spotify.com/v1/me/playlists', {
+      headers: {
+        Authorization: cookie && `${cookie.token_type} ${cookie.access_token}`,
+      },
+    })
+    .then(
+      (res) =>
+        (playlists = res.data.items.map((item: any) => {
+          return {
+            id: item.id,
+            href: item.href,
+            name: item.name,
+          };
+        }))
+    );
+
+  return { display_name, playlists };
 };
 
 export default SpotifyApp;
