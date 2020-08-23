@@ -4,10 +4,10 @@ import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 
-import { Playlists } from 'src/pages/app';
+import { UserPlaylists } from 'src/pages/app';
 
 interface Props {
-  playlists: Playlists;
+  playlists: UserPlaylists;
 }
 
 interface StyleProps extends ThemeProp {

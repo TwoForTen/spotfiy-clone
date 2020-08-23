@@ -14,6 +14,7 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0px 35px;
+  z-index: 1;
 `;
 
 const StyledHeader: React.FC = ({ children }): JSX.Element => {

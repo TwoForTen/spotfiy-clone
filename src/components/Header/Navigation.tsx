@@ -10,7 +10,6 @@ const StyledHeaderButton = styled.button`
   width: fit-content;
   height: fit-content;
   padding: 1px;
-  margin: 0px 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -34,7 +33,7 @@ const Navigation: React.FC = (): JSX.Element => {
           <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
         </svg>
       </StyledHeaderButton>
-      <StyledHeaderButton>
+      <StyledHeaderButton style={{ marginLeft: '14px' }}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"

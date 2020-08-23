@@ -38,7 +38,7 @@ const Login: React.FC = (): JSX.Element => {
       <Title>Login to Spotify to continue</Title>
       <a
         style={{ zIndex: 1 }}
-        href="https://accounts.spotify.com/authorize?client_id=e201e606a545454ebf802153eee4e83d&redirect_uri=http://localhost:3000&scope=user-read-private%20user-read-email&response_type=code&state=129873"
+        href="https://accounts.spotify.com/authorize?client_id=e201e606a545454ebf802153eee4e83d&redirect_uri=http://localhost:3000&scope=user-read-private%20user-read-email%20user-top-read&response_type=code&state=129873"
       >
         <Button primary>Login</Button>
       </a>

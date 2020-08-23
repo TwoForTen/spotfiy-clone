@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-// import axios from 'axios';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import cookies from 'next-cookies';
@@ -7,41 +6,59 @@ import axios from 'src/axiosInstance';
 
 import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
+import TracksContainer from 'src/components/HomepageBrowse';
+import Layout from 'src/components/Layout';
 
 interface Props {
-  display_name: string;
-  playlists: Playlists;
+  username: string;
+  playlists: UserPlaylists;
+  topArtists: BrowsePlaylists;
 }
 
 interface Cookie {
   access_token: string;
-  token_type: string;
 }
 
-export type Playlists = {
+export type UserPlaylists = {
   id: string;
-  href: string;
   name: string;
 }[];
 
+export type BrowsePlaylists = {
+  items: {
+    id: string;
+    name: string;
+    imageUrl: string;
+    type?: string;
+  }[];
+  description: {
+    title: string;
+    description?: string;
+  };
+};
+
 const SpotifyApp: NextPage<Props> = ({
-  display_name,
+  username,
   playlists,
+  topArtists,
 }): JSX.Element | null => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!!!display_name) {
+    if (!!!username) {
       router.push('/');
     }
-  }, [display_name]);
+  }, [username]);
 
-  if (!!!display_name) return null;
+  if (!!!username) return null;
 
   return (
     <>
-      <Header username={display_name} />
+      <Header username={username} />
       <Sidebar playlists={playlists} />
+      <Layout>
+        <TracksContainer topArtists={topArtists} />
+      </Layout>
     </>
   );
 };
@@ -53,13 +70,15 @@ SpotifyApp.getInitialProps = async (
     cookies(context).access ||
     (context.query.access && JSON.parse(`${context.query.access}`)) ||
     '';
-  let display_name: string = '';
-  let playlists: Playlists = [];
+
+  let username: string = '';
+  let playlists: UserPlaylists = [];
+  let topArtists: BrowsePlaylists = { items: [], description: { title: '' } };
 
   await axios(cookie.access_token)
     .get('/me')
     .then((res) => {
-      display_name = res.data.display_name;
+      username = res.data.display_name;
     })
     .catch(() => {});
 
@@ -70,14 +89,33 @@ SpotifyApp.getInitialProps = async (
         (playlists = res.data.items.map((item: any) => {
           return {
             id: item.id,
-            href: item.href,
             name: item.name,
           };
         }))
     )
     .catch(() => {});
 
-  return { display_name, playlists };
+  await axios(cookie.access_token)
+    .get('/me/top/artists?time_range=long_term&limit=9')
+    .then(
+      (res) =>
+        (topArtists = {
+          items: res.data.items.map((item: any) => {
+            return {
+              id: item.id,
+              name: item.name,
+              imageUrl: item.images[0].url,
+              type: item.type,
+            };
+          }),
+          description: {
+            title: 'Your top artists',
+          },
+        })
+    )
+    .catch(() => {});
+
+  return { username, playlists, topArtists };
 };
 
 export default SpotifyApp;

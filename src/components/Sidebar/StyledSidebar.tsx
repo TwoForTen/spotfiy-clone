@@ -7,6 +7,7 @@ const Aside = styled.aside`
   padding: 24px 8px;
   background-color: ${({ theme }: ThemeProp) => theme.colors.ui.sidebar};
   position: fixed;
+  z-index: 1;
 `;
 
 const StyledSidebar: React.FC = ({ children }): JSX.Element => {

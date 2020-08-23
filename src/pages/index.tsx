@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 import querystring from 'querystring';
 import axios from 'axios';
 import Login from 'src/components/Login';

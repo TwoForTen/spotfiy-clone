@@ -22,7 +22,7 @@ export const theme: DefaultTheme = {
     },
   },
   shape: {
-    borderRadius: '5px',
+    borderRadius: '8px',
     ui: {
       sidebar: {
         height: '100vh',

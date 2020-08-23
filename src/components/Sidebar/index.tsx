@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import StyledSidebar from './StyledSidebar';
 import NavLinks from './NavLinks';
 
-import { Playlists } from 'src/pages/app';
+import { UserPlaylists } from 'src/pages/app';
 
 interface Props {
-  playlists: Playlists;
+  playlists: UserPlaylists;
 }
 
 const LogoContainer = styled.div`
