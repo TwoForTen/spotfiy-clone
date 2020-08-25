@@ -2,26 +2,25 @@ import Title from './Title';
 import Card from './Card';
 import styled from 'styled-components';
 
-import { BrowsePlaylists } from 'src/pages/app';
+import { BrowsePlaylist } from 'src/pages/app';
 
 interface Props {
-  topArtists: BrowsePlaylists;
+  playlist: BrowsePlaylist;
 }
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
-  /* grid-template-rows: 1fr repeat(10, 0px); */
   grid-gap: 16px;
   overflow-y: hidden;
 `;
 
-const TracksContainer: React.FC<Props> = ({ topArtists }): JSX.Element => {
+const HomepageBrowse: React.FC<Props> = ({ playlist }): JSX.Element => {
   return (
     <>
-      <Title description={topArtists.description} />
+      <Title description={playlist.description} />
       <Container>
-        {topArtists.items.map((data: any) => {
+        {playlist.items.map((data: any) => {
           return <Card data={data} key={data.id} />;
         })}
       </Container>
@@ -29,4 +28,4 @@ const TracksContainer: React.FC<Props> = ({ topArtists }): JSX.Element => {
   );
 };
 
-export default TracksContainer;
+export default HomepageBrowse;
