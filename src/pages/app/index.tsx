@@ -89,30 +89,63 @@ SpotifyApp.getInitialProps = async (
       '/me/top/artists?time_range=long_term&limit=9'
     );
 
-  await axios.all([getUser(), getUserPlaylists(), getUserTopArtists()]).then(
-    axios.spread((user, playlists, userTopArtists) => {
-      username = user.data.display_name;
-      userPlaylists = playlists.data.items.map((item: any) => {
-        return {
-          id: item.id,
-          name: item.name,
-        };
-      });
-      browsePlaylists.push({
-        items: userTopArtists.data.items.map((item: any) => {
+  const getUserTopTracks = () =>
+    axiosInstance(cookie.access_token).get(
+      '/me/top/tracks?time_range=long_term&limit=9'
+    );
+
+  await axios
+    .all([
+      getUser(),
+      getUserPlaylists(),
+      getUserTopArtists(),
+      getUserTopTracks(),
+    ])
+    .then(
+      axios.spread((user, playlists, topArtists, topTracks) => {
+        // Set username
+        username = user.data.display_name;
+
+        // Set User's Playlists for Sidebar
+        userPlaylists = playlists.data.items.map((item: any) => {
           return {
             id: item.id,
             name: item.name,
-            imageUrl: item.images[0].url,
-            type: item.type,
           };
-        }),
-        description: {
-          title: 'Your top artists',
-        },
-      });
-    })
-  );
+        });
+
+        // Push All Browse Playlists
+        browsePlaylists.push(
+          {
+            items: topArtists.data.items.map((item: any) => {
+              return {
+                id: item.id,
+                name: item.name,
+                imageUrl: item.images[0].url,
+                type: item.type,
+              };
+            }),
+            description: {
+              title: 'Your top artists',
+            },
+          },
+          {
+            items: topTracks.data.items.map((item: any) => {
+              return {
+                id: item.id,
+                name: item.name,
+                imageUrl: item.album.images[0].url,
+                type: item.type,
+              };
+            }),
+            description: {
+              title: 'Your top tracks',
+            },
+          }
+        );
+      })
+    )
+    .catch(() => {});
 
   return { username, userPlaylists, browsePlaylists };
 };

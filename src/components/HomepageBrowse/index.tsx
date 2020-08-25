@@ -7,8 +7,11 @@ import { BrowsePlaylist } from 'src/pages/app';
 interface Props {
   playlist: BrowsePlaylist;
 }
-
 const Container = styled.div`
+  margin: 35px;
+`;
+
+const PlaylistContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
   grid-gap: 16px;
@@ -17,14 +20,14 @@ const Container = styled.div`
 
 const HomepageBrowse: React.FC<Props> = ({ playlist }): JSX.Element => {
   return (
-    <>
+    <Container>
       <Title description={playlist.description} />
-      <Container>
+      <PlaylistContainer>
         {playlist.items.map((data: any) => {
           return <Card data={data} key={data.id} />;
         })}
-      </Container>
-    </>
+      </PlaylistContainer>
+    </Container>
   );
 };
 

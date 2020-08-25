@@ -3,10 +3,8 @@ import { ThemeProp } from 'src/interfaces/ThemeProp';
 
 const StyledLayout = styled.div`
   position: relative;
-  padding-top: ${({ theme }: ThemeProp) =>
-    `calc(${theme.shape.ui.header.height} + 20px)`};
-  padding-left: ${({ theme }: ThemeProp) =>
-    `calc(${theme.shape.ui.sidebar.width} + 35px)`};
+  padding-top: ${({ theme }: ThemeProp) => theme.shape.ui.header.height};
+  padding-left: ${({ theme }: ThemeProp) => theme.shape.ui.sidebar.width};
   padding-right: 35px;
 `;
 
