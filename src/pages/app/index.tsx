@@ -30,7 +30,7 @@ export type BrowsePlaylist = {
     id: string;
     name: string;
     imageUrl: string;
-    type?: string;
+    description?: string;
   }[];
   description: {
     title: string;
@@ -94,56 +94,97 @@ SpotifyApp.getInitialProps = async (
       '/me/top/tracks?time_range=long_term&limit=9'
     );
 
+  const getFeatured = () =>
+    axiosInstance(cookie.access_token).get(
+      'https://api.spotify.com/v1/browse/featured-playlists?limit=9&locale=en_US&country=hr'
+    );
+
+  const getNewReleases = () =>
+    axiosInstance(cookie.access_token).get(
+      'https://api.spotify.com/v1/browse/new-releases?limit=9'
+    );
+
   await axios
     .all([
       getUser(),
       getUserPlaylists(),
       getUserTopArtists(),
       getUserTopTracks(),
+      getFeatured(),
+      getNewReleases(),
     ])
     .then(
-      axios.spread((user, playlists, topArtists, topTracks) => {
-        // Set username
-        username = user.data.display_name;
+      axios.spread(
+        (user, playlists, topArtists, topTracks, featured, newReleases) => {
+          console.log(newReleases);
+          // Set username
+          username = user.data.display_name;
 
-        // Set User's Playlists for Sidebar
-        userPlaylists = playlists.data.items.map((item: any) => {
-          return {
-            id: item.id,
-            name: item.name,
-          };
-        });
+          // Set User's Playlists for Sidebar
+          userPlaylists = playlists.data.items.map((item: any) => {
+            return {
+              id: item.id,
+              name: item.name,
+            };
+          });
 
-        // Push All Browse Playlists
-        browsePlaylists.push(
-          {
-            items: topArtists.data.items.map((item: any) => {
-              return {
-                id: item.id,
-                name: item.name,
-                imageUrl: item.images[0].url,
-                type: item.type,
-              };
-            }),
-            description: {
-              title: 'Your top artists',
+          // Push All Browse Playlists
+          browsePlaylists.push(
+            {
+              items: topArtists.data.items.map((item: any) => {
+                return {
+                  id: item.id,
+                  name: item.name,
+                  imageUrl: item.images[0].url,
+                  description: item.type,
+                };
+              }),
+              description: {
+                title: 'Your top artists',
+              },
             },
-          },
-          {
-            items: topTracks.data.items.map((item: any) => {
-              return {
-                id: item.id,
-                name: item.name,
-                imageUrl: item.album.images[0].url,
-                type: item.type,
-              };
-            }),
-            description: {
-              title: 'Your top tracks',
+            {
+              items: topTracks.data.items.map((item: any) => {
+                return {
+                  id: item.id,
+                  name: item.name,
+                  imageUrl: item.album.images[0].url,
+                  description: item.type,
+                };
+              }),
+              description: {
+                title: 'Your top tracks',
+              },
             },
-          }
-        );
-      })
+            {
+              items: featured.data.playlists.items.map((item: any) => {
+                return {
+                  id: item.id,
+                  name: item.name,
+                  imageUrl: item.images[0].url,
+                  description: item.description,
+                };
+              }),
+              description: {
+                title: featured.data.message,
+              },
+            },
+            {
+              items: newReleases.data.albums.items.map((item: any) => {
+                return {
+                  id: item.id,
+                  name: item.name,
+                  imageUrl: item.images[0].url,
+                  description: item.type,
+                };
+              }),
+              description: {
+                title: 'New releases',
+              },
+            }
+          );
+        }
+      )
     )
     .catch(() => {});
 

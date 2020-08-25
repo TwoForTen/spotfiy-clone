@@ -6,12 +6,12 @@ interface Props {
     id: string;
     name: string;
     imageUrl: string;
-    type?: string;
+    description?: string;
   };
 }
 
 interface StyleProps {
-  type?: string;
+  description?: string;
 }
 
 const CardRoot = styled.figure`
@@ -25,10 +25,35 @@ const CardRoot = styled.figure`
   flex-direction: column;
   width: 100%;
   flex: 1;
+  cursor: pointer;
+  position: relative;
+`;
+
+const PlayButton = styled.button`
+  border-radius: 50%;
+  background-color: ${({ theme }: ThemeProp) => theme.colors.primary.main};
+  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 15px;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+  &:hover {
+    background-color: ${({ theme }: ThemeProp) => theme.colors.primary.lighten};
+    transform: scale(1.07);
+  }
+  ${CardRoot}:hover & {
+    display: flex;
+  }
 `;
 
 const ImageContainer = styled.div`
-  border-radius: ${({ type }: StyleProps) => type === 'artist' && '50%'};
+  border-radius: ${({ description }: StyleProps) =>
+    description === 'artist' && '50%'};
   width: 100%;
   padding-bottom: 100%;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
@@ -48,6 +73,8 @@ const Image = styled.img`
 
 const DescriptionContainer = styled.div`
   text-transform: capitalize;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 `;
 
 const Title = styled.h4`
@@ -61,18 +88,30 @@ const Title = styled.h4`
 const Description = styled.small`
   color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
   font-size: 10px;
+  white-space: normal;
 `;
 
 const Card: React.FC<Props> = ({ data }): JSX.Element => {
   return (
     <CardRoot>
-      <ImageContainer type={data.type}>
+      <ImageContainer description={data.description}>
         <Image src={data.imageUrl} alt="" />
       </ImageContainer>
       <DescriptionContainer>
         <Title>{data.name}</Title>
-        <Description>{data.type}</Description>
+        <Description>{data.description}</Description>
       </DescriptionContainer>
+      <PlayButton>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M8 5v14l11-7z" fill="white" />
+        </svg>
+      </PlayButton>
     </CardRoot>
   );
 };
