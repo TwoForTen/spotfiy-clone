@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 
@@ -92,8 +93,14 @@ const Description = styled.small`
 `;
 
 const Card: React.FC<Props> = ({ data }): JSX.Element => {
+  const router = useRouter();
+
   return (
-    <CardRoot>
+    <CardRoot
+      onClick={() =>
+        router.push('app/playlist/[playlist]', `/app/playlist/${data.id}`)
+      }
+    >
       <ImageContainer description={data.description}>
         <Image src={data.imageUrl} alt="" />
       </ImageContainer>
