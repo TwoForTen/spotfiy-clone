@@ -8,11 +8,12 @@ interface Props {
     name: string;
     imageUrl: string;
     description?: string;
+    type?: string;
   };
 }
 
 interface StyleProps {
-  description?: string;
+  type?: string;
 }
 
 const CardRoot = styled.figure`
@@ -53,8 +54,7 @@ const PlayButton = styled.button`
 `;
 
 const ImageContainer = styled.div`
-  border-radius: ${({ description }: StyleProps) =>
-    description === 'artist' && '50%'};
+  border-radius: ${({ type }: StyleProps) => type === 'artist' && '50%'};
   width: 100%;
   padding-bottom: 100%;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
@@ -98,10 +98,13 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
   return (
     <CardRoot
       onClick={() =>
-        router.push('app/playlist/[playlist]', `/app/playlist/${data.id}`)
+        router.push(
+          `app/${data.type}/[${data.type}]`,
+          `/app/${data.type}/${data.id}`
+        )
       }
     >
-      <ImageContainer description={data.description}>
+      <ImageContainer type={data.type}>
         <Image src={data.imageUrl} alt="" />
       </ImageContainer>
       <DescriptionContainer>

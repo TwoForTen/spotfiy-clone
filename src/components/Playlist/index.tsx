@@ -1,7 +1,12 @@
 import Header from './Header';
+import { PlaylistType } from 'src/pages/app/playlist/[playlist]';
 
-const Playlist: React.FC = (): JSX.Element => {
-  return <Header />;
+export interface Props {
+  playlist: PlaylistType;
+}
+
+const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
+  return <Header playlist={playlist} />;
 };
 
 export default Playlist;

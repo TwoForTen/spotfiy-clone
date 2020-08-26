@@ -5,6 +5,7 @@ interface RGB {
 }
 
 const getAverageRGB = (imgEl: HTMLImageElement): RGB => {
+  imgEl.crossOrigin = '';
   let blockSize: number = 5, // only visit every 5 pixels
     defaultRGB: RGB = { r: 0, g: 0, b: 0 }, // for non-supporting envs
     canvas: HTMLCanvasElement = document.createElement('canvas'),
@@ -13,7 +14,7 @@ const getAverageRGB = (imgEl: HTMLImageElement): RGB => {
     data: ImageData,
     width: number,
     height: number,
-    i = -4,
+    i: number = -4,
     length: number,
     rgb: RGB = { r: 0, g: 0, b: 0 },
     count: number = 0;
@@ -31,7 +32,8 @@ const getAverageRGB = (imgEl: HTMLImageElement): RGB => {
   try {
     data = context.getImageData(0, 0, width, height);
   } catch (e) {
-    /* security error, img on diff domain */ return defaultRGB;
+    /* security error, img on diff domain */ alert('v');
+    return defaultRGB;
   }
 
   length = data.data.length;
