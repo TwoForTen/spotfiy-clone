@@ -74,10 +74,9 @@ SpotifyApp.getInitialProps = async (
     (context.query.access && JSON.parse(`${context.query.access}`)) ||
     '';
 
-  const browsePlaylists: BrowsePlaylist[] = [];
-
   let username: string = '';
   let userPlaylists: UserPlaylists = [];
+  const browsePlaylists: BrowsePlaylist[] = [];
 
   const getUser = () => axiosInstance(cookie.access_token).get('/me');
 
@@ -86,22 +85,22 @@ SpotifyApp.getInitialProps = async (
 
   const getUserTopArtists = () =>
     axiosInstance(cookie.access_token).get(
-      '/me/top/artists?time_range=long_term&limit=9'
+      '/me/top/artists?time_range=long_term&limit=8'
     );
 
   const getUserTopTracks = () =>
     axiosInstance(cookie.access_token).get(
-      '/me/top/tracks?time_range=long_term&limit=9'
+      '/me/top/tracks?time_range=long_term&limit=8'
     );
 
   const getFeatured = () =>
     axiosInstance(cookie.access_token).get(
-      'https://api.spotify.com/v1/browse/featured-playlists?limit=9&locale=en_US&country=hr'
+      'https://api.spotify.com/v1/browse/featured-playlists?limit=8&locale=en_US&country=hr'
     );
 
   const getNewReleases = () =>
     axiosInstance(cookie.access_token).get(
-      'https://api.spotify.com/v1/browse/new-releases?limit=9'
+      'https://api.spotify.com/v1/browse/new-releases?limit=8'
     );
 
   await axios
@@ -116,7 +115,6 @@ SpotifyApp.getInitialProps = async (
     .then(
       axios.spread(
         (user, playlists, topArtists, topTracks, featured, newReleases) => {
-          console.log(newReleases);
           // Set username
           username = user.data.display_name;
 
@@ -154,6 +152,7 @@ SpotifyApp.getInitialProps = async (
               }),
               description: {
                 title: 'Your top tracks',
+                description: "They're on the top for a reason.",
               },
             },
             {
@@ -175,7 +174,7 @@ SpotifyApp.getInitialProps = async (
                   id: item.id,
                   name: item.name,
                   imageUrl: item.images[0].url,
-                  description: item.type,
+                  description: item.artists[0].name,
                 };
               }),
               description: {

@@ -17,7 +17,7 @@ interface StyleProps {
 const CardRoot = styled.figure`
   background-color: ${({ theme }: ThemeProp) => theme.colors.ui.card};
   border-radius: ${({ theme }: ThemeProp) => theme.shape.borderRadius};
-  padding: 20px;
+  padding: 25px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -73,7 +73,6 @@ const Image = styled.img`
 
 const DescriptionContainer = styled.div`
   text-transform: capitalize;
-  -webkit-line-clamp: 2;
   overflow: hidden;
 `;
 
@@ -82,7 +81,8 @@ const Title = styled.h4`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-bottom: 12px;
+  margin-bottom: 5px;
+  font-size: 15px;
 `;
 
 const Description = styled.small`

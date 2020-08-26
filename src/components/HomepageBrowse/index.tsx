@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import Title from './Title';
 import Card from './Card';
 import styled from 'styled-components';
@@ -15,7 +16,6 @@ const PlaylistContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
   grid-gap: 16px;
-  overflow-y: hidden;
 `;
 
 const HomepageBrowse: React.FC<Props> = ({ playlist }): JSX.Element => {
