@@ -99,7 +99,7 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
     <CardRoot
       onClick={() =>
         router.push(
-          `app/${data.type}/[${data.type}]`,
+          `app/[playlistType]/[playlist]`,
           `/app/${data.type}/${data.id}`
         )
       }

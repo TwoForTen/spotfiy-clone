@@ -1,18 +1,22 @@
 import { useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Props } from './index';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import Layout from 'src/components/Layout';
-import getAverageRGB from 'src/utils/getAverageRGB';
+import getAverageRGB, { RGB } from 'src/utils/getAverageRGB';
 
 interface StyleProps extends ThemeProp {
   faded?: boolean;
-  bgColor?: {
-    r: number;
-    g: number;
-    b: number;
-  };
+  bgColor?: RGB;
 }
+
+const animateGradient = keyframes`
+  from{
+    opacity: 1;
+  }to{
+    opacity: 0;
+  }
+`;
 
 const StyledHeader = styled.div`
   width: 100%;
@@ -20,6 +24,18 @@ const StyledHeader = styled.div`
   background: ${({ theme, bgColor }: StyleProps) =>
     `linear-gradient(rgb(${bgColor?.r}, ${bgColor?.g}, ${bgColor?.b}), #121212)`};
   position: absolute;
+  transition: 5s;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    background-color: #121212;
+    animation: ${animateGradient} 800ms forwards;
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -64,7 +80,7 @@ const Image = styled.img`
 
 const Header: React.FC<Props> = ({ playlist }): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [bgColor, setBgColor] = useState({ r: 0, g: 0, b: 0 });
+  const [bgColor, setBgColor] = useState<RGB>({ r: 0, g: 0, b: 0 });
 
   return (
     <>
@@ -89,9 +105,13 @@ const Header: React.FC<Props> = ({ playlist }): JSX.Element => {
             <Description faded>{playlist.description}</Description>
             <InfoContainer>
               <Description>{playlist.owner}</Description>{' '}
-              <Description faded>{`· ${new Intl.NumberFormat('en').format(
-                playlist.followers
-              )} likes`}</Description>
+              <Description faded>
+                {playlist.type === 'playlist'
+                  ? `· ${new Intl.NumberFormat('en').format(
+                      playlist?.followers || 0
+                    )} likes`
+                  : `· ${playlist.releaseDate.split('-')[0]}`}
+              </Description>
             </InfoContainer>
           </div>
         </HeaderContainer>

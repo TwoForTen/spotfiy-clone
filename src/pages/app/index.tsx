@@ -12,6 +12,7 @@ import { Cookie } from 'src/interfaces/Cookie';
 
 interface Props {
   browsePlaylists: BrowsePlaylist[];
+  error: boolean;
 }
 
 export type UserPlaylists = {
@@ -35,16 +36,17 @@ export type BrowsePlaylist = {
 
 const SpotifyApp: NextPage<Props> = ({
   browsePlaylists,
+  error,
 }): JSX.Element | null => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!!!browsePlaylists) {
+    if (error) {
       router.push('/');
     }
-  }, [browsePlaylists]);
+  }, [error]);
 
-  if (!!!browsePlaylists) return null;
+  if (error) return null;
 
   return (
     <Layout>
@@ -64,6 +66,7 @@ SpotifyApp.getInitialProps = async (
     '';
 
   const browsePlaylists: BrowsePlaylist[] = [];
+  let error: boolean = false;
 
   const getUserTopArtists = () =>
     axiosInstance(cookie.access_token).get(
@@ -156,9 +159,11 @@ SpotifyApp.getInitialProps = async (
         );
       })
     )
-    .catch(() => {});
+    .catch(() => {
+      error = true;
+    });
 
-  return { browsePlaylists };
+  return { browsePlaylists, error };
 };
 
 export default SpotifyApp;
