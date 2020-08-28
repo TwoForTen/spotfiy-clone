@@ -19,7 +19,7 @@ interface StyleProps {
 const CardRoot = styled.figure`
   background-color: ${({ theme }: ThemeProp) => theme.colors.ui.card};
   border-radius: ${({ theme }: ThemeProp) => theme.shape.borderRadius};
-  padding: 25px;
+  padding: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -94,8 +94,6 @@ const Description = styled.small`
 
 const Card: React.FC<Props> = ({ data }): JSX.Element => {
   const router = useRouter();
-
-  console.log(data);
 
   return (
     <CardRoot

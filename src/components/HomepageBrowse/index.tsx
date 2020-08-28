@@ -1,4 +1,3 @@
-import Layout from '../Layout';
 import Title from './Title';
 import Card from './Card';
 import styled from 'styled-components';
@@ -14,22 +13,21 @@ const Container = styled.div`
 
 const PlaylistContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  max-height: 1fr;
   grid-gap: 16px;
 `;
 
 const HomepageBrowse: React.FC<Props> = ({ playlist }): JSX.Element => {
   return (
-    <Layout>
-      <Container>
-        <Title description={playlist.description} />
-        <PlaylistContainer>
-          {playlist.items.map((data: any) => {
-            return <Card data={data} key={data.id} />;
-          })}
-        </PlaylistContainer>
-      </Container>
-    </Layout>
+    <Container>
+      <Title description={playlist.description} />
+      <PlaylistContainer>
+        {playlist.items.map((data: any) => {
+          return <Card data={data} key={data.id} />;
+        })}
+      </PlaylistContainer>
+    </Container>
   );
 };
 

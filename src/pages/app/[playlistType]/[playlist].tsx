@@ -1,10 +1,8 @@
-import { useEffect } from 'react';
 import { NextPage, NextPageContext } from 'next';
-import { useRouter } from 'next/router';
 import PlaylistComponent from 'src/components/Playlist';
 import cookies from 'next-cookies';
 import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
-
+import useAuth from 'src/hooks/useAuth';
 import axiosInstance from 'src/axiosInstance';
 
 import { Cookie } from 'src/interfaces/Cookie';
@@ -24,14 +22,13 @@ export type PlaylistType = {
 
 interface Props {
   playlist: PlaylistType;
-  error: boolean;
+  error: number | null;
 }
 
-const Playlist: NextPage<Props> = ({ playlist, error }): JSX.Element => {
-  const router = useRouter();
-  useEffect(() => {
-    if (error) router.push('/app/404', '/app/404');
-  }, [error]);
+const Playlist: NextPage<Props> = ({ playlist, error }): JSX.Element | null => {
+  useAuth(error);
+
+  if (error) return null;
 
   return <PlaylistComponent playlist={playlist} />;
 };
@@ -52,7 +49,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     tracks: [],
     type: undefined,
   };
-  let error: boolean = false;
+  let error: number | null = null;
 
   try {
     if (
@@ -79,10 +76,10 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
         type: res.data.type,
       };
     } else {
-      throw new Error('Invalid route');
+      throw { response: { data: { error: { status: 404 } } } };
     }
   } catch (e) {
-    error = true;
+    error = e.response.data.error.status;
   }
 
   return { playlist, error };

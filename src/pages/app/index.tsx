@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
 import { NextPage, NextPageContext } from 'next';
-import { useRouter } from 'next/router';
 import cookies from 'next-cookies';
 import axiosInstance from 'src/axiosInstance';
 import axios from 'axios';
+import Layout from 'src/components/Layout';
+import useAuth from 'src/hooks/useAuth';
 
 import HomepageBrowse from 'src/components/HomepageBrowse';
 import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
@@ -12,7 +12,7 @@ import { Cookie } from 'src/interfaces/Cookie';
 
 interface Props {
   browsePlaylists: BrowsePlaylist[];
-  error: boolean;
+  error: number | null;
 }
 
 export type BrowsePlaylist = {
@@ -33,22 +33,16 @@ const SpotifyApp: NextPage<Props> = ({
   browsePlaylists,
   error,
 }): JSX.Element | null => {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (error) {
-      router.push('/');
-    }
-  }, [error]);
+  useAuth(error);
 
   if (error) return null;
 
   return (
-    <>
+    <Layout>
       {browsePlaylists.map((playlist, index) => {
         return <HomepageBrowse playlist={playlist} key={index} />;
       })}
-    </>
+    </Layout>
   );
 };
 
@@ -60,69 +54,105 @@ SpotifyApp.getInitialProps = async (
     (context.query.access && JSON.parse(`${context.query.access}`)) ||
     '';
 
+  const categories: string[] = [
+    'toplists',
+    'summer',
+    'at_home',
+    'mood',
+    'pop',
+    'hiphop',
+    'edm_dance',
+    'indie_alt',
+    'party',
+    'chill',
+    'wellness',
+    'focus',
+    'workout',
+    'soul',
+    'sleep',
+    'rock',
+    'dinner',
+    'rnb',
+    'roots',
+    'romance',
+    'travel',
+    'sessions',
+    'metal',
+    'kpop',
+    'gaming',
+    'anime',
+    'popculture',
+  ];
+
+  const categoryList: string[] = [];
+
+  for (let i = 0; i < 5; i++) {
+    const categoryIndex = Math.floor(Math.random() * categories.length);
+    categoryList.push(categories[categoryIndex]);
+    categories.splice(categoryIndex, 1);
+  }
+
   const browsePlaylists: BrowsePlaylist[] = [];
-  let error: boolean = false;
+  let error: number | null = null;
+
+  const getCategoryPlaylists = () => {
+    const promises = [];
+    for (const category of categoryList) {
+      promises.push(
+        axiosInstance(cookie.access_token).get(
+          `/browse/categories/${category}/playlists?limit=9`
+        )
+      );
+    }
+
+    return promises;
+  };
 
   const getUserTopArtists = () =>
     axiosInstance(cookie.access_token).get(
-      '/me/top/artists?time_range=long_term&limit=8'
-    );
-
-  const getUserTopTracks = () =>
-    axiosInstance(cookie.access_token).get(
-      '/me/top/tracks?time_range=long_term&limit=8'
+      '/me/top/artists?time_range=long_term&limit=9'
     );
 
   const getFeatured = () =>
     axiosInstance(cookie.access_token).get(
-      'https://api.spotify.com/v1/browse/featured-playlists?limit=8&locale=en_US&country=hr'
+      'https://api.spotify.com/v1/browse/featured-playlists?limit=9&locale=en_US'
     );
 
   const getNewReleases = () =>
     axiosInstance(cookie.access_token).get(
-      'https://api.spotify.com/v1/browse/new-releases?limit=8'
+      'https://api.spotify.com/v1/browse/new-releases?limit=9'
     );
 
   await axios
     .all([
       getUserTopArtists(),
-      getUserTopTracks(),
       getFeatured(),
       getNewReleases(),
+      ...getCategoryPlaylists(),
     ])
     .then(
-      axios.spread((topArtists, topTracks, featured, newReleases) => {
+      axios.spread((topArtists, featured, newReleases, ...rest) => {
+        console.log(rest);
         // Push All Browse Playlists
         browsePlaylists.push(
-          {
-            items: topArtists.data.items.map((item: any) => {
+          ...rest.map(
+            (category): BrowsePlaylist => {
               return {
-                id: item.id,
-                name: item.name,
-                imageUrl: item.images[0].url,
-                description: item.type,
-                type: item.type,
+                items: category.data.playlists.items.map((item: any) => {
+                  return {
+                    id: item.id,
+                    name: item.name,
+                    imageUrl: item.images[0].url,
+                    description: item.description,
+                    type: item.type,
+                  };
+                }),
+                description: {
+                  title: 'a',
+                },
               };
-            }),
-            description: {
-              title: 'Your top artists',
-            },
-          },
-          {
-            items: topTracks.data.items.map((item: any) => {
-              return {
-                id: item.id,
-                name: item.name,
-                imageUrl: item.album.images[0].url,
-                description: item.type,
-                type: item.type,
-              };
-            }),
-            description: {
-              title: 'Your top tracks',
-              description: "They're on the top for a reason.",
-            },
-          },
+            }
+          ),
           {
             items: featured.data.playlists.items.map((item: any) => {
               return {
@@ -150,12 +180,26 @@ SpotifyApp.getInitialProps = async (
             description: {
               title: 'New releases',
             },
+          },
+          {
+            items: topArtists.data.items.map((item: any) => {
+              return {
+                id: item.id,
+                name: item.name,
+                imageUrl: item.images[0].url,
+                description: item.type,
+                type: item.type,
+              };
+            }),
+            description: {
+              title: 'Your top artists',
+            },
           }
         );
       })
     )
-    .catch(() => {
-      error = true;
+    .catch((e) => {
+      error = e.response.data.error.status;
     });
 
   return { browsePlaylists, error };

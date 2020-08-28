@@ -22,11 +22,14 @@ const animateGradient = keyframes`
 
 const StyledHeader = styled.div`
   width: 100%;
-  height: 600px;
+  height: 280px;
   background: ${({ theme, bgColor }: StyleProps) =>
     `linear-gradient(rgb(${bgColor?.r}, ${bgColor?.g}, ${bgColor?.b}), #121212)`};
   position: absolute;
+  top: 0;
+  left: 0;
   transition: 5s;
+  z-index: -1;
   &:after {
     content: '';
     position: absolute;
@@ -146,44 +149,44 @@ const Header: React.FC<Props> = ({ playlist }): JSX.Element => {
   return (
     <>
       <StyledHeader bgColor={bgColor} />
-      <Layout>
-        <HeaderContainer>
-          <ImageContainer type={playlist.type}>
-            {playlist.imageUrl !== '' ? (
-              <Image
-                ref={imgRef}
-                onLoad={onImageLoad}
-                src={playlist.imageUrl}
-                alt=""
-              />
-            ) : (
-              <ImagePlaceholder>
-                <svg
-                  width="70"
-                  height="71"
-                  viewBox="0 0 80 81"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <title>Playlist Icon</title>
-                  <path
-                    d="M25.6 11.565v45.38c-2.643-3.27-6.68-5.37-11.2-5.37-7.94 0-14.4 6.46-14.4 14.4s6.46 14.4 14.4 14.4 14.4-6.46 14.4-14.4v-51.82l48-10.205V47.2c-2.642-3.27-6.678-5.37-11.2-5.37-7.94 0-14.4 6.46-14.4 14.4s6.46 14.4 14.4 14.4S80 64.17 80 56.23V0L25.6 11.565zm-11.2 65.61c-6.176 0-11.2-5.025-11.2-11.2 0-6.177 5.024-11.2 11.2-11.2 6.176 0 11.2 5.023 11.2 11.2 0 6.174-5.026 11.2-11.2 11.2zm51.2-9.745c-6.176 0-11.2-5.024-11.2-11.2 0-6.174 5.024-11.2 11.2-11.2 6.176 0 11.2 5.026 11.2 11.2 0 6.178-5.026 11.2-11.2 11.2z"
-                    fill="white"
-                    fillRule="evenodd"
-                  ></path>
-                </svg>
-              </ImagePlaceholder>
-            )}
-          </ImageContainer>
-          <div>
-            <Description>{playlist.type?.toUpperCase()}</Description>
-            <Title>{playlist.name}</Title>
-            <Description faded>{playlist.description}</Description>
-            <InfoContainer>
-              {getPlaylistInfo(playlist.type, playlist)}
-            </InfoContainer>
-          </div>
-        </HeaderContainer>
-      </Layout>
+      {/* <Layout> */}
+      <HeaderContainer>
+        <ImageContainer type={playlist.type}>
+          {playlist.imageUrl !== '' ? (
+            <Image
+              ref={imgRef}
+              onLoad={onImageLoad}
+              src={playlist.imageUrl}
+              alt=""
+            />
+          ) : (
+            <ImagePlaceholder>
+              <svg
+                width="70"
+                height="71"
+                viewBox="0 0 80 81"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>Playlist Icon</title>
+                <path
+                  d="M25.6 11.565v45.38c-2.643-3.27-6.68-5.37-11.2-5.37-7.94 0-14.4 6.46-14.4 14.4s6.46 14.4 14.4 14.4 14.4-6.46 14.4-14.4v-51.82l48-10.205V47.2c-2.642-3.27-6.678-5.37-11.2-5.37-7.94 0-14.4 6.46-14.4 14.4s6.46 14.4 14.4 14.4S80 64.17 80 56.23V0L25.6 11.565zm-11.2 65.61c-6.176 0-11.2-5.025-11.2-11.2 0-6.177 5.024-11.2 11.2-11.2 6.176 0 11.2 5.023 11.2 11.2 0 6.174-5.026 11.2-11.2 11.2zm51.2-9.745c-6.176 0-11.2-5.024-11.2-11.2 0-6.174 5.024-11.2 11.2-11.2 6.176 0 11.2 5.026 11.2 11.2 0 6.178-5.026 11.2-11.2 11.2z"
+                  fill="white"
+                  fillRule="evenodd"
+                ></path>
+              </svg>
+            </ImagePlaceholder>
+          )}
+        </ImageContainer>
+        <div>
+          <Description>{playlist.type?.toUpperCase()}</Description>
+          <Title>{playlist.name}</Title>
+          <Description faded>{playlist.description}</Description>
+          <InfoContainer>
+            {getPlaylistInfo(playlist.type, playlist)}
+          </InfoContainer>
+        </div>
+      </HeaderContainer>
+      {/* </Layout> */}
     </>
   );
 };
