@@ -4,6 +4,7 @@ import { ThemeProp } from 'src/interfaces/ThemeProp';
 
 const StyledNavigation = styled.div`
   display: flex;
+  z-index: 1;
 `;
 
 const StyledHeaderButton = styled.button`

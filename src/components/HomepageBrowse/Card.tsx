@@ -95,11 +95,13 @@ const Description = styled.small`
 const Card: React.FC<Props> = ({ data }): JSX.Element => {
   const router = useRouter();
 
+  console.log(data);
+
   return (
     <CardRoot
       onClick={() =>
         router.push(
-          `app/[playlistType]/[playlist]`,
+          `/app/[playlistType]/[playlist]`,
           `/app/${data.type}/${data.id}`
         )
       }

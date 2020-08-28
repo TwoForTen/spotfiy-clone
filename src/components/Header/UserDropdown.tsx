@@ -35,7 +35,7 @@ const UserDropdown: React.FC = (): JSX.Element => {
   return (
     <StyledUserDropdown>
       <ul>
-        <MenuLink>Profile</MenuLink>
+        <MenuLink onClick={() => router.push('/app/user/me')}>Profile</MenuLink>
         <MenuLink
           onClick={() => {
             removeCookie('access');

@@ -6,7 +6,7 @@ import axiosInstance from 'src/axiosInstance';
 import axios from 'axios';
 
 import HomepageBrowse from 'src/components/HomepageBrowse';
-import Layout from 'src/components/Layout';
+import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
 
 import { Cookie } from 'src/interfaces/Cookie';
 
@@ -15,18 +15,13 @@ interface Props {
   error: boolean;
 }
 
-export type UserPlaylists = {
-  id: string;
-  name: string;
-}[];
-
 export type BrowsePlaylist = {
   items: {
     id: string;
     name: string;
     imageUrl: string;
     description?: string;
-    type?: string;
+    type: TypeOfPlaylist;
   }[];
   description: {
     title: string;
@@ -49,11 +44,11 @@ const SpotifyApp: NextPage<Props> = ({
   if (error) return null;
 
   return (
-    <Layout>
+    <>
       {browsePlaylists.map((playlist, index) => {
         return <HomepageBrowse playlist={playlist} key={index} />;
       })}
-    </Layout>
+    </>
   );
 };
 

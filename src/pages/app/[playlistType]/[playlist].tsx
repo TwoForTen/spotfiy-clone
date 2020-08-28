@@ -3,6 +3,7 @@ import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import PlaylistComponent from 'src/components/Playlist';
 import cookies from 'next-cookies';
+import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
 
 import axiosInstance from 'src/axiosInstance';
 
@@ -12,12 +13,13 @@ export type PlaylistType = {
   id: string;
   imageUrl: string;
   name: string;
-  description: string;
-  owner: string;
+  description?: string;
+  owner?: string;
   followers?: number;
-  releaseDate: string;
-  tracks: [];
-  type: string;
+  releaseDate?: string;
+  playlistCount?: number;
+  tracks?: [];
+  type: TypeOfPlaylist;
 };
 
 interface Props {
@@ -48,7 +50,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     owner: '',
     releaseDate: '',
     tracks: [],
-    type: '',
+    type: undefined,
   };
   let error: boolean = false;
 

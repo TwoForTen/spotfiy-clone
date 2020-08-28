@@ -8,6 +8,8 @@ import cookies from 'next-cookies';
 import axiosInstance from 'src/axiosInstance';
 import axios from 'axios';
 
+import { Cookie } from 'src/interfaces/Cookie';
+
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
 
@@ -17,10 +19,6 @@ import Sidebar from 'src/components/Sidebar';
 type InitialProps = { username: string; playlists: UserPlaylists };
 
 type Props = AppProps & InitialProps;
-
-interface Cookie {
-  access_token: string;
-}
 
 export type UserPlaylists = {
   id: string;
