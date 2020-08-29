@@ -25,6 +25,7 @@ const PlayButton = styled.button`
 `;
 
 const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
+  console.log(playlist);
   return (
     <>
       <Layout>
@@ -40,7 +41,7 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
             <path d="M8 5v14l11-7z" fill="white" />
           </svg>
         </PlayButton>
-        <PlaylistTable tracks={playlist.tracks} />
+        <PlaylistTable tracks={playlist.tracks} type={playlist.type} />
       </Layout>
     </>
   );

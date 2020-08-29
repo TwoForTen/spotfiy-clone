@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 import moment from 'moment';
 
 interface Props {
   track: any;
   index: number;
+  type: TypeOfPlaylist;
 }
 
 const TrackContainer = styled.div`
@@ -57,7 +59,7 @@ const TrackInfo = styled.span`
   font-size: 13px;
 `;
 
-const Track: React.FC<Props> = ({ track, index }): JSX.Element => {
+const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
 
@@ -71,17 +73,19 @@ const Track: React.FC<Props> = ({ track, index }): JSX.Element => {
         {index}
       </TrackInfo>
       <TrackInfoContainer>
-        <ImageContainer>
-          <Image
-            loading="lazy"
-            ref={imgRef}
-            src={track.album.images[0].url}
-            alt=""
-            onLoad={() => setImgLoaded(true)}
-            style={{ visibility: imgLoaded ? 'visible' : 'hidden' }}
-          />
-          {!imgLoaded && <ImageSkeleton />}
-        </ImageContainer>
+        {type === 'playlist' && (
+          <ImageContainer>
+            <Image
+              loading="lazy"
+              ref={imgRef}
+              src={track.album.images[0].url}
+              alt=""
+              onLoad={() => setImgLoaded(true)}
+              style={{ visibility: imgLoaded ? 'visible' : 'hidden' }}
+            />
+            {!imgLoaded && <ImageSkeleton />}
+          </ImageContainer>
+        )}
         <div>
           <TrackTitle>{track.name}</TrackTitle>
           <TrackInfo>
@@ -89,7 +93,7 @@ const Track: React.FC<Props> = ({ track, index }): JSX.Element => {
           </TrackInfo>
         </div>
       </TrackInfoContainer>
-      <TrackInfo>{track.album.name}</TrackInfo>
+      {type === 'playlist' && <TrackInfo>{track.album.name}</TrackInfo>}
       <TrackInfo style={{ textAlign: 'right' }}>
         {moment(track.duration_ms).format('m:ss')}
       </TrackInfo>

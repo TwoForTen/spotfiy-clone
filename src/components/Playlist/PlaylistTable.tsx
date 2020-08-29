@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 import Track from './Track';
 
 interface Props {
   tracks: [];
+  type: TypeOfPlaylist;
 }
 
 const Table = styled.div`
@@ -28,13 +30,13 @@ const TableHeader = styled.div`
   z-index: 2;
 `;
 
-const PlaylistTable: React.FC<Props> = ({ tracks }): JSX.Element => {
+const PlaylistTable: React.FC<Props> = ({ tracks, type }): JSX.Element => {
   return (
     <Table>
       <TableHeader>
         <span style={{ textAlign: 'right' }}>#</span>
         <span>TITLE</span>
-        <span>ALBUM</span>
+        {type === 'playlist' && <span>ALBUM</span>}
         <span style={{ textAlign: 'right' }}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <title>duration</title>
@@ -47,7 +49,12 @@ const PlaylistTable: React.FC<Props> = ({ tracks }): JSX.Element => {
       </TableHeader>
       {tracks.map((track: any, index: number) => {
         return (
-          <Track track={track.track} index={index + 1} key={track.track.id} />
+          <Track
+            type={type}
+            track={type === 'playlist' ? track.track : track}
+            index={index + 1}
+            key={type === 'playlist' ? track.track?.id : track.id}
+          />
         );
       })}
     </Table>

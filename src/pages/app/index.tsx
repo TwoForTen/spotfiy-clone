@@ -6,7 +6,7 @@ import Layout from 'src/components/Layout';
 import useAuth from 'src/hooks/useAuth';
 
 import HomepageBrowse from 'src/components/HomepageBrowse';
-import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
+import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 
 import { Cookie } from 'src/interfaces/Cookie';
 
@@ -113,26 +113,17 @@ SpotifyApp.getInitialProps = async (
       '/me/top/artists?time_range=long_term&limit=9'
     );
 
-  const getFeatured = () =>
-    axiosInstance(cookie.access_token).get(
-      'https://api.spotify.com/v1/browse/featured-playlists?limit=9&locale=en_US'
-    );
-
   const getNewReleases = () =>
     axiosInstance(cookie.access_token).get(
       'https://api.spotify.com/v1/browse/new-releases?limit=9'
     );
 
   await axios
-    .all([
-      getUserTopArtists(),
-      getFeatured(),
-      getNewReleases(),
-      ...getCategoryPlaylists(),
-    ])
+    .all([getUserTopArtists(), getNewReleases(), ...getCategoryPlaylists()])
     .then(
-      axios.spread((topArtists, featured, newReleases, ...rest) => {
+      axios.spread((topArtists, newReleases, ...rest) => {
         // Push All Browse Playlists
+        console.log(newReleases);
         browsePlaylists.push(
           ...rest.map(
             (category): BrowsePlaylist => {
@@ -152,20 +143,6 @@ SpotifyApp.getInitialProps = async (
               };
             }
           ),
-          {
-            items: featured.data.playlists.items.map((item: any) => {
-              return {
-                id: item.id,
-                name: item.name,
-                imageUrl: item.images[0].url,
-                description: item.description,
-                type: item.type,
-              };
-            }),
-            description: {
-              title: featured.data.message,
-            },
-          },
           {
             items: newReleases.data.albums.items.map((item: any) => {
               return {
