@@ -16,7 +16,7 @@ export type PlaylistType = {
   followers?: number;
   releaseDate?: string;
   playlistCount?: number;
-  tracks?: [];
+  tracks: [];
   type: TypeOfPlaylist;
 };
 

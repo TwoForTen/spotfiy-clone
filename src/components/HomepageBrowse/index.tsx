@@ -13,8 +13,7 @@ const Container = styled.div`
 
 const PlaylistContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
-  max-height: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
   grid-gap: 16px;
 `;
 

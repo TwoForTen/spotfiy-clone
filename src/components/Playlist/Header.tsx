@@ -1,8 +1,7 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Props } from './index';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
-import Layout from 'src/components/Layout';
 import getAverageRGB, { RGB } from 'src/utils/getAverageRGB';
 import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
 
@@ -22,7 +21,7 @@ const animateGradient = keyframes`
 
 const StyledHeader = styled.div`
   width: 100%;
-  height: 280px;
+  height: 400px;
   background: ${({ theme, bgColor }: StyleProps) =>
     `linear-gradient(rgb(${bgColor?.r}, ${bgColor?.g}, ${bgColor?.b}), #121212)`};
   position: absolute;
@@ -146,10 +145,16 @@ const Header: React.FC<Props> = ({ playlist }): JSX.Element => {
     setBgColor(getAverageRGB(imgRef.current || document.createElement('img')));
   }, []);
 
+  useEffect(() => {
+    if (imgRef.current?.complete)
+      setBgColor(
+        getAverageRGB(imgRef.current || document.createElement('img'))
+      );
+  }, []);
+
   return (
     <>
       <StyledHeader bgColor={bgColor} />
-      {/* <Layout> */}
       <HeaderContainer>
         <ImageContainer type={playlist.type}>
           {playlist.imageUrl !== '' ? (
@@ -186,7 +191,6 @@ const Header: React.FC<Props> = ({ playlist }): JSX.Element => {
           </InfoContainer>
         </div>
       </HeaderContainer>
-      {/* </Layout> */}
     </>
   );
 };

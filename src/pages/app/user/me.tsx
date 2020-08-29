@@ -26,12 +26,10 @@ const Profile: NextPage<Props> = ({
   if (error) return null;
 
   return (
-    <>
+    <Layout>
       <Header playlist={playlist} />
-      <Layout>
-        <HomepageBrowse playlist={playlists} />
-      </Layout>
-    </>
+      <HomepageBrowse playlist={playlists} />
+    </Layout>
   );
 };
 

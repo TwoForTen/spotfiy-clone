@@ -18,10 +18,11 @@ export const GlobalStyle: GlobalStyleComponent<
     }
     body{
       background-color: #121212;
+      overflow-x: hidden;
     }
     button{
       border: none;
-  outline: none;
+      outline: none;
     }
     a{
       color: initial;
