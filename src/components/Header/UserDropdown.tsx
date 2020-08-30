@@ -15,6 +15,8 @@ const StyledUserDropdown = styled.div`
   text-align: left;
   color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
   overflow: hidden;
+  display: block;
+  z-index: 500;
 `;
 
 const MenuLink = styled.li`
@@ -31,7 +33,7 @@ const MenuLink = styled.li`
 
 const UserDropdown: React.FC = (): JSX.Element => {
   const router = useRouter();
-  const [, , removeCookie] = useCookies();
+  const [, , removeCookie] = useCookies(['access']);
   return (
     <StyledUserDropdown>
       <ul>

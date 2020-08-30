@@ -7,7 +7,6 @@ import Login from 'src/components/Login';
 import cookies from 'next-cookies';
 import { useCookies } from 'react-cookie';
 import moment from 'moment';
-import { access } from 'fs';
 
 interface AccessResponse {
   accessResponse: {
@@ -72,9 +71,7 @@ Home.getInitialProps = async (
       .then((res) => {
         accessResponse = res.data;
       })
-      .catch((error) => {
-        console.log(error.response.data);
-      }));
+      .catch(() => {}));
 
   return { accessResponse };
 };

@@ -4,10 +4,13 @@ import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 
-import { UserPlaylists } from 'src/pages/app';
+import { BrowsePlaylist } from 'src/pages/app';
 
 interface Props {
-  playlists: UserPlaylists;
+  playlists: {
+    id: string;
+    name: string;
+  }[];
 }
 
 interface StyleProps extends ThemeProp {
@@ -144,9 +147,13 @@ const NavLinks: React.FC<Props> = ({ playlists }): JSX.Element => {
         <Divider />
         <PlaylistsTitle>PLAYLISTS</PlaylistsTitle>
         <ul>
-          {playlists.map((playlist) => {
+          {playlists.map((playlist: any) => {
             return (
-              <Link key={playlist.id} href={playlist.id}>
+              <Link
+                key={playlist.id}
+                href={'/app/[playlistType]/[playlist]'}
+                as={`/app/playlist/${playlist.id}`}
+              >
                 <a>
                   <PlaylistsList>{playlist.name}</PlaylistsList>
                 </a>

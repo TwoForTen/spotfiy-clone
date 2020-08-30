@@ -76,17 +76,14 @@ SpotifyApp.getInitialProps = async (
     'roots',
     'romance',
     'travel',
-    'sessions',
     'metal',
     'kpop',
     'gaming',
-    'anime',
-    'popculture',
   ];
 
   const categoryList: string[] = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i <= 5; i++) {
     const categoryIndex = Math.floor(Math.random() * categories.length);
     categoryList.push(categories[categoryIndex]);
     categories.splice(categoryIndex, 1);

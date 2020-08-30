@@ -17,7 +17,7 @@ const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding: 0px 35px;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const HeaderBackground = styled.div.attrs(({ scrollPos }: StyleProps) => ({

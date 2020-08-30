@@ -87,6 +87,11 @@ MyApp.getInitialProps = async (
     )
     .catch(() => {});
 
+  await axiosInstance(cookie.access_token)
+    .get('https://api.spotify.com/v1/me/player/devices')
+    .then((res) => console.log(res.data))
+    .catch((e) => console.log(e.response.data.error));
+
   return { ...appProps, username, playlists };
 };
 

@@ -10,7 +10,10 @@ const useAuth = (error: number | null) => {
           router.replace('/');
           break;
         case 404:
-          router.push('/app/404');
+          router.push('/404');
+          break;
+        case 403:
+          alert('Premium required!');
         default:
           break;
       }
