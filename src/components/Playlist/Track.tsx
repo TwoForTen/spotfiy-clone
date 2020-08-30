@@ -97,15 +97,17 @@ const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
       ) : (
         <span
           onClick={() =>
-            axiosInstance(cookie.access.access_token).put(
-              'https://api.spotify.com/v1/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
-              {
-                uris: [
-                  'spotify:track:4iV5W9uYEdYUVa79Axb7Rh',
-                  'spotify:track:1301WleyT98MSxVHPZCA6M',
-                ],
-              }
-            )
+            axiosInstance(cookie.access.access_token)
+              .put(
+                'https://api.spotify.com/v1/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
+                {
+                  uris: [
+                    'spotify:track:4iV5W9uYEdYUVa79Axb7Rh',
+                    'spotify:track:1301WleyT98MSxVHPZCA6M',
+                  ],
+                }
+              )
+              .then(() => console.log('Playing Now!'))
           }
         >
           <svg

@@ -1,6 +1,4 @@
 import { combineReducers, createStore, compose } from 'redux';
-import { AccessState } from './access/types';
-import { accessReducer } from './access/reducer';
 
 declare global {
   interface Window {
@@ -13,13 +11,9 @@ const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
 
-export interface GlobalState {
-  access: AccessState;
-}
+export interface GlobalState {}
 
-const reducers = combineReducers({
-  access: accessReducer,
-});
+const reducers = combineReducers({});
 
 const store = createStore(reducers, composeEnhancers());
 

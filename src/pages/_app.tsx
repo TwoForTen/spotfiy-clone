@@ -8,12 +8,13 @@ import { CookiesProvider } from 'react-cookie';
 import cookies from 'next-cookies';
 import axiosInstance from 'src/axiosInstance';
 import axios from 'axios';
-import Script from 'react-load-script';
 import { Cookie } from 'src/interfaces/Cookie';
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
 import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
+import Script from 'react-load-script';
+import { useRouter } from 'next/router';
 
 type InitialProps = {
   username: string;
@@ -35,8 +36,9 @@ const MyApp = ({
   playlists,
   accessToken,
 }: Props): JSX.Element => {
+  const router = useRouter();
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && router.pathname !== '/') {
       window.onSpotifyWebPlaybackSDKReady = () => {
         const token = accessToken;
         const player = new window.Spotify.Player({
@@ -79,7 +81,7 @@ const MyApp = ({
         player.connect();
       };
     }
-  }, []);
+  }, [router.pathname]);
 
   return (
     <>
@@ -89,10 +91,6 @@ const MyApp = ({
       <Provider store={store}>
         <CookiesProvider>
           <ThemeProvider theme={theme}>
-            <Script
-              url="https://sdk.scdn.co/spotify-player.js"
-              onLoad={() => {}}
-            />
             <GlobalStyle />
             {!!username && (
               <>
@@ -104,6 +102,9 @@ const MyApp = ({
           </ThemeProvider>
         </CookiesProvider>
       </Provider>
+      {router.pathname !== '/' && (
+        <Script url="https://sdk.scdn.co/spotify-player.js" onLoad={() => {}} />
+      )}
     </>
   );
 };
