@@ -76,7 +76,7 @@ const TrackInfo = styled.span`
 const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // const [cookie] = useCookies(['access']);
+  const [cookie] = useCookies(['access']);
 
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
   const [trackHovered, setTrackHovered] = useState<boolean>(false);
@@ -95,7 +95,19 @@ const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
           {index}
         </TrackInfo>
       ) : (
-        <span>
+        <span
+          onClick={() =>
+            axiosInstance(cookie.access.access_token).put(
+              'https://api.spotify.com/v1/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
+              {
+                uris: [
+                  'spotify:track:4iV5W9uYEdYUVa79Axb7Rh',
+                  'spotify:track:1301WleyT98MSxVHPZCA6M',
+                ],
+              }
+            )
+          }
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="22"

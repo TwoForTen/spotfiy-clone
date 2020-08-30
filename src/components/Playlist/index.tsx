@@ -25,7 +25,6 @@ const PlayButton = styled.button`
 `;
 
 const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
-  console.log(playlist);
   return (
     <>
       <Layout>

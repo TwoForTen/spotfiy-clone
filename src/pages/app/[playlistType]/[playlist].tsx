@@ -1,7 +1,7 @@
 import { NextPage, NextPageContext } from 'next';
 import PlaylistComponent from 'src/components/Playlist';
 import cookies from 'next-cookies';
-import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
+import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 import useAuth from 'src/hooks/useAuth';
 import axiosInstance from 'src/axiosInstance';
 

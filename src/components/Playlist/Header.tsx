@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 import { Props } from './index';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import getAverageRGB, { RGB } from 'src/utils/getAverageRGB';
-import { TypeOfPlaylist } from 'src/interfaces/PlaylistType';
+import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 
 interface StyleProps extends ThemeProp {
   faded?: boolean;

@@ -120,7 +120,6 @@ SpotifyApp.getInitialProps = async (
     .then(
       axios.spread((topArtists, newReleases, ...rest) => {
         // Push All Browse Playlists
-        console.log(newReleases);
         browsePlaylists.push(
           ...rest.map(
             (category): BrowsePlaylist => {
