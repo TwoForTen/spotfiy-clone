@@ -13,6 +13,7 @@ import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
 import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
+import FooterPlayer from 'src/components/Player';
 import Script from 'react-load-script';
 import { useRouter } from 'next/router';
 
@@ -96,6 +97,7 @@ const MyApp = ({
               <>
                 <Header username={username} />
                 <Sidebar playlists={playlists} />
+                <FooterPlayer />
               </>
             )}
             <Component {...pageProps} />

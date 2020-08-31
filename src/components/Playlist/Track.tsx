@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 import moment from 'moment';
@@ -10,6 +10,13 @@ interface Props {
   track: any;
   index: number;
   type: TypeOfPlaylist;
+  onClick: () => void;
+  trackSelected: number;
+}
+
+interface StyleProps {
+  $trackSelected: number;
+  $index: number;
 }
 
 const TrackContainer = styled.div`
@@ -26,8 +33,13 @@ const TrackContainer = styled.div`
   text-overflow: ellipsis;
   border-radius: ${({ theme }: ThemeProp) => theme.shape.borderRadius};
   &:hover {
-    background-color: rgba(50, 50, 50, 0.8);
+    background-color: rgba(50, 50, 50, 0.6);
   }
+  ${({ $trackSelected, $index }: StyleProps) =>
+    $trackSelected === $index &&
+    css`
+      background-color: rgba(50, 50, 50, 1) !important;
+    `}
 `;
 
 const ImageContainer = styled.div`
@@ -68,12 +80,23 @@ const TrackTitle = styled.h5`
 const TrackInfo = styled.span`
   color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
   font-size: 13px;
+  ${({ $trackSelected, $index }: StyleProps) =>
+    $trackSelected === $index &&
+    css`
+      color: white !important;
+    `}
   ${TrackContainer}:hover & {
-    color: white !important;
+    color: white;
   }
 `;
 
-const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
+const Track: React.FC<Props> = ({
+  track,
+  index,
+  type,
+  onClick,
+  trackSelected,
+}): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [cookie] = useCookies(['access']);
@@ -87,29 +110,14 @@ const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
 
   return (
     <TrackContainer
+      $trackSelected={trackSelected}
+      $index={index}
+      onClick={onClick}
       onMouseOver={() => setTrackHovered(true)}
       onMouseLeave={() => setTrackHovered(false)}
     >
-      {!trackHovered ? (
-        <TrackInfo style={{ fontSize: '16px', textAlign: 'right' }}>
-          {index}
-        </TrackInfo>
-      ) : (
-        <span
-          onClick={() =>
-            axiosInstance(cookie.access.access_token)
-              .put(
-                'https://api.spotify.com/v1/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
-                {
-                  uris: [
-                    'spotify:track:4iV5W9uYEdYUVa79Axb7Rh',
-                    'spotify:track:1301WleyT98MSxVHPZCA6M',
-                  ],
-                }
-              )
-              .then(() => console.log('Playing Now!'))
-          }
-        >
+      {trackHovered || trackSelected === index ? (
+        <span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="22"
@@ -120,6 +128,14 @@ const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
             <path d="M8 5v14l11-7z" fill="white" />
           </svg>
         </span>
+      ) : (
+        <TrackInfo
+          $trackSelected={trackSelected}
+          $index={index}
+          style={{ fontSize: '16px', textAlign: 'right' }}
+        >
+          {index}
+        </TrackInfo>
       )}
       <TrackInfoContainer>
         {type === 'playlist' && (
@@ -139,13 +155,21 @@ const Track: React.FC<Props> = ({ track, index, type }): JSX.Element => {
         )}
         <div>
           <TrackTitle>{track?.name}</TrackTitle>
-          <TrackInfo>
+          <TrackInfo $trackSelected={trackSelected} $index={index}>
             {track?.artists?.map((artist: any) => artist?.name).join(', ')}
           </TrackInfo>
         </div>
       </TrackInfoContainer>
-      {type === 'playlist' && <TrackInfo>{track?.album?.name}</TrackInfo>}
-      <TrackInfo style={{ textAlign: 'right' }}>
+      {type === 'playlist' && (
+        <TrackInfo $trackSelected={trackSelected} $index={index}>
+          {track?.album?.name}
+        </TrackInfo>
+      )}
+      <TrackInfo
+        $trackSelected={trackSelected}
+        $index={index}
+        style={{ textAlign: 'right' }}
+      >
         {moment(track?.duration_ms).format('m:ss')}
       </TrackInfo>
     </TrackContainer>

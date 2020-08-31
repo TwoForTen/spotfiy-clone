@@ -18,6 +18,7 @@ declare module 'styled-components' {
         sidebar: string;
         background: string;
         card: string;
+        footer: string;
         text: string;
       };
     };
@@ -29,6 +30,10 @@ declare module 'styled-components' {
           width: string;
         };
         header: {
+          height: string;
+          width: string;
+        };
+        footer: {
           height: string;
           width: string;
         };

@@ -89,7 +89,13 @@ const Title = styled.h4`
 const Description = styled.small`
   color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
   font-size: 10px;
+  line-height: 16px;
   white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 const Card: React.FC<Props> = ({ data }): JSX.Element => {

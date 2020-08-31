@@ -4,6 +4,8 @@ import axiosInstance from 'src/axiosInstance';
 import axios from 'axios';
 import Layout from 'src/components/Layout';
 import useAuth from 'src/hooks/useAuth';
+import styled from 'styled-components';
+import { ThemeProp } from 'src/interfaces/ThemeProp';
 
 import HomepageBrowse from 'src/components/HomepageBrowse';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
@@ -29,6 +31,10 @@ export type BrowsePlaylist = {
   };
 };
 
+const Wrapper = styled.div`
+  padding-bottom: ${({ theme }: ThemeProp) => theme.shape.ui.footer.height};
+`;
+
 const SpotifyApp: NextPage<Props> = ({
   browsePlaylists,
   error,
@@ -39,9 +45,11 @@ const SpotifyApp: NextPage<Props> = ({
 
   return (
     <Layout>
-      {browsePlaylists.map((playlist, index) => {
-        return <HomepageBrowse playlist={playlist} key={index} />;
-      })}
+      <Wrapper>
+        {browsePlaylists.map((playlist, index) => {
+          return <HomepageBrowse playlist={playlist} key={index} />;
+        })}
+      </Wrapper>
     </Layout>
   );
 };

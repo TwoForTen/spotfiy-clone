@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
@@ -10,6 +11,7 @@ interface Props {
 
 const Table = styled.div`
   margin: 35px;
+  padding-bottom: ${({ theme }: ThemeProp) => theme.shape.ui.footer.height};
 `;
 
 const TableHeader = styled.div`
@@ -31,6 +33,7 @@ const TableHeader = styled.div`
 `;
 
 const PlaylistTable: React.FC<Props> = ({ tracks, type }): JSX.Element => {
+  const [trackSelected, setTrackSelected] = useState<number>(-1);
   return (
     <Table>
       <TableHeader>
@@ -50,8 +53,14 @@ const PlaylistTable: React.FC<Props> = ({ tracks, type }): JSX.Element => {
       {tracks.map((track: any, index: number) => {
         return (
           <Track
+            onClick={() =>
+              trackSelected !== index + 1
+                ? setTrackSelected(index + 1)
+                : setTrackSelected(-1)
+            }
             type={type}
             track={type === 'playlist' ? track.track : track}
+            trackSelected={trackSelected}
             index={index + 1}
             key={type === 'playlist' ? track.track?.id : track.id}
           />

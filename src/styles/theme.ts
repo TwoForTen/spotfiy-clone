@@ -18,6 +18,7 @@ export const theme: DefaultTheme = {
       sidebar: '#030303',
       background: '#121212',
       card: '#262626',
+      footer: '#262626',
       text: '#b3b3b3',
     },
   },
@@ -30,6 +31,10 @@ export const theme: DefaultTheme = {
       },
       header: {
         height: '60px',
+        width: '100%',
+      },
+      footer: {
+        height: '90px',
         width: '100%',
       },
     },
