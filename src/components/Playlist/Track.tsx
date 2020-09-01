@@ -5,6 +5,10 @@ import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 import moment from 'moment';
 import axiosInstance from 'src/axiosInstance';
 import { useCookies } from 'react-cookie';
+import { useSelector } from 'react-redux';
+
+import { GlobalState } from 'src/store';
+import { PlayingNowState } from 'src/store/PlayingNow/types';
 
 interface Props {
   track: any;
@@ -28,10 +32,7 @@ const TrackContainer = styled.div`
   padding: 0 15px;
   height: 60px;
   align-items: center;
-  /* white-space: nowrap; */
   position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
   border-radius: ${({ theme }: ThemeProp) => theme.shape.borderRadius};
   &:hover {
     background-color: rgba(50, 50, 50, 0.6);
@@ -70,6 +71,9 @@ const ImageSkeleton = styled.div`
 const TrackInfoContainer = styled.div`
   display: flex;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const TrackTitle = styled.h5`
@@ -102,7 +106,9 @@ const Track: React.FC<Props> = ({
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [cookie] = useCookies(['access']);
-
+  const trackPosition = useSelector<GlobalState, PlayingNowState['position']>(
+    (state: GlobalState) => state.playingNow.position
+  );
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
   const [trackHovered, setTrackHovered] = useState<boolean>(false);
 
@@ -112,12 +118,13 @@ const Track: React.FC<Props> = ({
 
   const playTrack = () => {
     axiosInstance(cookie.access.access_token).put(
-      'https://api.spotify.com/v1/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
+      '/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
       {
         context_uri: playlistUri,
         offset: {
           position: index - 1,
         },
+        position_ms: trackPosition,
       }
     );
   };

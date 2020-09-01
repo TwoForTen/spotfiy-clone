@@ -61,7 +61,6 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
       const res = await axiosInstance(cookie.access_token).get(
         `/${context.query.playlistType + 's'}/${context.query.playlist}`
       );
-      console.log(res.data);
       playlist = {
         id: res.data.id,
         imageUrl: res.data.images[0].url,

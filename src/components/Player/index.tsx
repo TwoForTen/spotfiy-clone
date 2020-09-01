@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
+import { useCookies } from 'react-cookie';
+import axios from 'src/axiosInstance';
+
+import { GlobalState } from 'src/store';
+import { PlayingNowState } from 'src/store/PlayingNow/types';
+import { DeviceState } from 'src/store/Device/types';
 
 interface StyleProps {
-  trackAt?: number;
+  min?: number;
+  max?: number;
   sliderType?: SliderType;
 }
 
@@ -69,9 +78,11 @@ const TrackTitle = styled.h5<ThemeProp>`
   font-size: 13px;
 `;
 
-const Artists = styled.small<ThemeProp>`
+const PlayerSmallText = styled.small<ThemeProp>`
   color: ${({ theme }) => theme.colors.ui.text};
   font-size: 11px;
+  min-width: 40px;
+  text-align: center;
 `;
 
 const TrackControlsContainer = styled.div`
@@ -185,7 +196,12 @@ const TrackSlider = styled.input.attrs(() => ({
   }
 `;
 
-const TrackPlayed = styled.div`
+const TrackPlayed = styled.div.attrs(({ min, max }: StyleProps) => ({
+  style: {
+    // @ts-expect-error
+    marginLeft: `calc(-100% + ${(min / max) * 100}%)`,
+  },
+}))`
   height: 5px;
   position: absolute;
   background-color: gray;
@@ -194,7 +210,6 @@ const TrackPlayed = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  margin-left: ${({ trackAt }: StyleProps) => `calc(-100% + ${trackAt}%)`};
   pointer-events: none;
   ${({ sliderType }: StyleProps) =>
     sliderType === SliderType.Track
@@ -221,17 +236,69 @@ const VolumeControlContainer = styled.div`
 `;
 
 const FooterPlayer: React.FC = (): JSX.Element => {
-  const [trackAt, setTrackAt] = useState<number>(0);
+  const playingNow = useSelector<GlobalState, PlayingNowState>(
+    (state: GlobalState) => state.playingNow
+  );
+  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
+    (state: GlobalState) => state.device.deviceId
+  );
+
+  const [trackPosition, setTrackPosition] = useState<number>(
+    playingNow.position
+  );
+  const [volume, setVolume] = useState<number | undefined>(playingNow.volume);
+  const [dragging, setDragging] = useState<boolean>(false);
+  const [cookie] = useCookies(['access']);
+
+  const pausePlaying = (): void => {
+    axios(cookie.access.access_token)
+      .put(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`)
+      .catch(() => {});
+  };
+
+  const draggingSlider = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setDragging(true);
+    if (e.target.name === 'volume') {
+      setVolume(+e.target.value);
+    } else {
+      setTrackPosition(+e.target.value);
+    }
+  };
+
+  const seekPosition = (e: React.MouseEvent<HTMLInputElement>): void => {
+    const target = e.target as HTMLInputElement;
+    setTrackPosition(+target.value);
+    axios(cookie.access.access_token).put(
+      `/me/player/seek?device_id=${deviceId}&position_ms=${target.value}`
+    );
+    setDragging(false);
+  };
+
+  const changeVolume = (e: React.MouseEvent<HTMLInputElement>): void => {
+    const target = e.target as HTMLInputElement;
+    setVolume(+target.value);
+    axios(cookie.access.access_token).put(
+      `/me/player/volume?device_id=${deviceId}&volume_percent=${target.value}`
+    );
+    setDragging(false);
+  };
+
+  useEffect((): void => {
+    if (!dragging) setTrackPosition(playingNow.position);
+  }, [playingNow.position, dragging]);
 
   return (
     <PlayerContainer>
       <TrackInfoContainer>
         <ImageContainer>
-          <ImageSkeleton />
+          <Image src={playingNow.imageUrl} alt="" />
+          {/* <ImageSkeleton /> */}
         </ImageContainer>
         <div>
-          <TrackTitle>Track Title Goes Hereeeeeeeeeeeeeerererer</TrackTitle>
-          <Artists>Artist1, Artist2</Artists>
+          <TrackTitle>{playingNow.name}</TrackTitle>
+          <PlayerSmallText>
+            {playingNow.artists.map((artist) => artist.name).join(', ')}
+          </PlayerSmallText>
         </div>
       </TrackInfoContainer>
       <TrackControlsContainer>
@@ -247,7 +314,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
               <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" fill="#999" />
             </svg>
           </SkipButton>
-          <PlayButton>
+          <PlayButton onClick={pausePlaying}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="22"
@@ -270,27 +337,45 @@ const FooterPlayer: React.FC = (): JSX.Element => {
             </svg>
           </SkipButton>
         </div>
-        <TrackSliderContainer>
-          <div
-            style={{
-              overflowY: 'visible',
-              width: '100%',
-              lineHeight: '0',
-              borderRadius: '5px',
-            }}
-          >
-            <TrackSlider
-              min={0}
-              max={100}
-              value={trackAt}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setTrackAt(+e.target.value)
-              }
-              sliderType={SliderType.Track}
-            />
-            <TrackPlayed trackAt={trackAt} sliderType={SliderType.Track} />
-          </div>
-        </TrackSliderContainer>
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <PlayerSmallText>
+            {moment(trackPosition).format('m:ss')}
+          </PlayerSmallText>
+          <TrackSliderContainer>
+            <div
+              style={{
+                overflowY: 'visible',
+                width: '100%',
+                lineHeight: '0',
+                borderRadius: '5px',
+              }}
+            >
+              <TrackSlider
+                min={0}
+                max={playingNow.duration}
+                value={trackPosition}
+                onMouseUp={seekPosition}
+                onChange={draggingSlider}
+                sliderType={SliderType.Track}
+              />
+              <TrackPlayed
+                min={playingNow.position}
+                max={playingNow.duration}
+                sliderType={SliderType.Track}
+              />
+            </div>
+          </TrackSliderContainer>
+          <PlayerSmallText>
+            {moment(playingNow.duration).format('m:ss')}
+          </PlayerSmallText>
+        </div>
       </TrackControlsContainer>
       <VolumeControlContainer>
         <VolumeButton>
@@ -317,8 +402,20 @@ const FooterPlayer: React.FC = (): JSX.Element => {
               borderRadius: '5px',
             }}
           >
-            <TrackSlider sliderType={SliderType.Volume} />
-            <TrackPlayed trackAt={trackAt} sliderType={SliderType.Volume} />
+            <TrackSlider
+              min={0}
+              max={100}
+              value={volume}
+              name="volume"
+              sliderType={SliderType.Volume}
+              onChange={draggingSlider}
+              onMouseUp={changeVolume}
+            />
+            <TrackPlayed
+              min={volume}
+              max={100}
+              sliderType={SliderType.Volume}
+            />
           </div>
         </VolumeControlSlider>
       </VolumeControlContainer>

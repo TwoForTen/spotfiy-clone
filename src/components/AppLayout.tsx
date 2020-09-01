@@ -1,11 +1,19 @@
 import { useEffect } from 'react';
+import Script from 'react-load-script';
 import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
 import FooterPlayer from 'src/components/Player';
 import { UserPlaylists } from 'src/pages/_app';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { GlobalState } from 'src/store';
 import { storeDeviceId } from 'src/store/Device/actions';
-import Script from 'react-load-script';
+import {
+  storeTrack,
+  updatePosition,
+  setVolume,
+} from 'src/store/PlayingNow/actions';
+import { PlayingNowState } from 'src/store/PlayingNow/types';
 
 type Props = {
   username: string;
@@ -19,6 +27,9 @@ const AppLayout: React.FC<Props> = ({
   accessToken,
 }): JSX.Element => {
   const dispatch = useDispatch();
+  const paused = useSelector<GlobalState, PlayingNowState['paused']>(
+    (state: GlobalState) => state.playingNow.paused
+  );
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -47,8 +58,38 @@ const AppLayout: React.FC<Props> = ({
 
         // Playback status updates
         player.addListener('player_state_changed', (state: any) => {
-          console.log(state);
+          dispatch(
+            storeTrack({
+              context: {
+                contextDescription: state.context.metadata.context_description,
+                contextUri: state.context.uri,
+              },
+              artists: state.track_window.current_track.artists,
+              duration: state.duration,
+              position: state.position,
+              id: state.track_window.current_track.id,
+              imageUrl: state.track_window.current_track.album.images[0].url,
+              name: state.track_window.current_track.name,
+              paused: state.paused,
+            })
+          );
         });
+
+        // Get Initial Volume
+        player.getVolume().then((volume: number) => {
+          dispatch(setVolume(volume));
+        });
+
+        // Get Current Track Position
+        if (!paused) {
+          setInterval(() => {
+            player.getCurrentState().then((state: any) => {
+              if (state) {
+                dispatch(updatePosition(state.position));
+              }
+            });
+          }, 500);
+        }
 
         // Ready
         player.addListener('ready', ({ device_id }: any) => {
@@ -65,7 +106,7 @@ const AppLayout: React.FC<Props> = ({
         player.connect();
       };
     }
-  }, []);
+  }, [paused]);
   return (
     <>
       <Header username={username} />
