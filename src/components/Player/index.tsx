@@ -90,10 +90,39 @@ const PlayButton = styled.button`
   background-color: transparent;
   border: 1px solid #999;
   border-radius: 50%;
+  cursor: pointer;
   &:hover {
     border: 1px solid white;
     transform: scale(1.1);
 
+    > svg > path:last-child {
+      fill: white;
+    }
+  }
+`;
+
+const SkipButton = styled.button`
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover {
+    > svg > path:last-child {
+      fill: white;
+    }
+  }
+`;
+
+const VolumeButton = styled.button`
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  background-color: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover {
     > svg > path:last-child {
       fill: white;
     }
@@ -207,15 +236,17 @@ const FooterPlayer: React.FC = (): JSX.Element => {
       </TrackInfoContainer>
       <TrackControlsContainer>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24"
-            viewBox="0 0 24 24"
-            width="24"
-          >
-            <path d="M0 0h24v24H0z" fill="none" />
-            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" fill="white" />
-          </svg>
+          <SkipButton>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" fill="#999" />
+            </svg>
+          </SkipButton>
           <PlayButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -227,15 +258,17 @@ const FooterPlayer: React.FC = (): JSX.Element => {
               <path d="M8 5v14l11-7z" fill="#999" />
             </svg>
           </PlayButton>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24"
-            viewBox="0 0 24 24"
-            width="24"
-          >
-            <path d="M0 0h24v24H0z" fill="none" />
-            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" fill="white" />
-          </svg>
+          <SkipButton>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 0 24 24"
+              width="24"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" fill="#999" />
+            </svg>
+          </SkipButton>
         </div>
         <TrackSliderContainer>
           <div
@@ -260,19 +293,21 @@ const FooterPlayer: React.FC = (): JSX.Element => {
         </TrackSliderContainer>
       </TrackControlsContainer>
       <VolumeControlContainer>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="18"
-          viewBox="0 0 24 24"
-          width="18"
-          style={{ marginRight: '8px' }}
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path
-            fill="white"
-            d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
-          />
-        </svg>
+        <VolumeButton>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="18"
+            viewBox="0 0 24 24"
+            width="18"
+            style={{ marginRight: '8px' }}
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path
+              fill="#999"
+              d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"
+            />
+          </svg>
+        </VolumeButton>
         <VolumeControlSlider>
           <div
             style={{

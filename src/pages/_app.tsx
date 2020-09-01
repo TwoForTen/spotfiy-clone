@@ -11,11 +11,10 @@ import axios from 'axios';
 import { Cookie } from 'src/interfaces/Cookie';
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
-import Header from 'src/components/Header';
-import Sidebar from 'src/components/Sidebar';
-import FooterPlayer from 'src/components/Player';
-import Script from 'react-load-script';
+
 import { useRouter } from 'next/router';
+
+import AppLayout from 'src/components/AppLayout';
 
 type InitialProps = {
   username: string;
@@ -38,52 +37,6 @@ const MyApp = ({
   accessToken,
 }: Props): JSX.Element => {
   const router = useRouter();
-  useEffect(() => {
-    if (typeof window !== 'undefined' && router.pathname !== '/') {
-      window.onSpotifyWebPlaybackSDKReady = () => {
-        const token = accessToken;
-        const player = new window.Spotify.Player({
-          name: 'Web Playback SDK Quick Start Player',
-          getOAuthToken: (cb: any) => {
-            cb(token);
-          },
-        });
-
-        // Error handling
-        player.addListener('initialization_error', ({ message }: any) => {
-          console.error(message);
-        });
-        player.addListener('authentication_error', ({ message }: any) => {
-          console.error(message);
-        });
-        player.addListener('account_error', ({ message }: any) => {
-          console.error(message);
-        });
-        player.addListener('playback_error', ({ message }: any) => {
-          console.error(message);
-        });
-
-        // Playback status updates
-        player.addListener('player_state_changed', (state: any) => {
-          console.log(state);
-        });
-
-        // Ready
-        player.addListener('ready', ({ device_id }: any) => {
-          console.log('Ready with Device ID', device_id);
-        });
-
-        // Not Ready
-        player.addListener('not_ready', ({ device_id }: any) => {
-          console.log('Device ID has gone offline', device_id);
-        });
-
-        // Connect to the player!
-        player.connect();
-      };
-    }
-  }, [router.pathname]);
-
   return (
     <>
       <Head>
@@ -93,20 +46,17 @@ const MyApp = ({
         <CookiesProvider>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
-            {!!username && (
-              <>
-                <Header username={username} />
-                <Sidebar playlists={playlists} />
-                <FooterPlayer />
-              </>
+            {!!accessToken && (
+              <AppLayout
+                username={username}
+                playlists={playlists}
+                accessToken={accessToken}
+              />
             )}
             <Component {...pageProps} />
           </ThemeProvider>
         </CookiesProvider>
       </Provider>
-      {router.pathname !== '/' && (
-        <Script url="https://sdk.scdn.co/spotify-player.js" onLoad={() => {}} />
-      )}
     </>
   );
 };

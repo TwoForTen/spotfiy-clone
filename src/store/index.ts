@@ -1,4 +1,6 @@
 import { combineReducers, createStore, compose } from 'redux';
+import deviceReducer from './Device/reducer';
+import { DeviceState } from './Device/types';
 
 declare global {
   interface Window {
@@ -11,9 +13,13 @@ const composeEnhancers =
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
   compose;
 
-export interface GlobalState {}
+export interface GlobalState {
+  device: DeviceState;
+}
 
-const reducers = combineReducers({});
+const reducers = combineReducers({
+  device: deviceReducer,
+});
 
 const store = createStore(reducers, composeEnhancers());
 

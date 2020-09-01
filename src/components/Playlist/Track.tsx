@@ -12,6 +12,7 @@ interface Props {
   type: TypeOfPlaylist;
   onClick: () => void;
   trackSelected: number;
+  playlistUri: string;
 }
 
 interface StyleProps {
@@ -96,6 +97,7 @@ const Track: React.FC<Props> = ({
   type,
   onClick,
   trackSelected,
+  playlistUri,
 }): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -108,6 +110,18 @@ const Track: React.FC<Props> = ({
     if (imgRef.current?.complete) setImgLoaded(true);
   }, []);
 
+  const playTrack = () => {
+    axiosInstance(cookie.access.access_token).put(
+      'https://api.spotify.com/v1/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
+      {
+        context_uri: playlistUri,
+        offset: {
+          position: index - 1,
+        },
+      }
+    );
+  };
+
   return (
     <TrackContainer
       $trackSelected={trackSelected}
@@ -117,7 +131,7 @@ const Track: React.FC<Props> = ({
       onMouseLeave={() => setTrackHovered(false)}
     >
       {trackHovered || trackSelected === index ? (
-        <span>
+        <span onClick={playTrack}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="22"

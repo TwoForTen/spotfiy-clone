@@ -18,6 +18,7 @@ export type PlaylistType = {
   playlistCount?: number;
   tracks: [];
   type: TypeOfPlaylist;
+  uri: string;
 };
 
 interface Props {
@@ -48,6 +49,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     releaseDate: '',
     tracks: [],
     type: undefined,
+    uri: '',
   };
   let error: number | null = null;
 
@@ -59,6 +61,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
       const res = await axiosInstance(cookie.access_token).get(
         `/${context.query.playlistType + 's'}/${context.query.playlist}`
       );
+      console.log(res.data);
       playlist = {
         id: res.data.id,
         imageUrl: res.data.images[0].url,
@@ -74,6 +77,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
         releaseDate: res.data.release_date,
         tracks: res.data.tracks.items,
         type: res.data.type,
+        uri: res.data.uri,
       };
     } else {
       throw { response: { data: { error: { status: 404 } } } };

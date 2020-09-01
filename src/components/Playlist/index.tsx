@@ -40,7 +40,7 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
             <path d="M8 5v14l11-7z" fill="white" />
           </svg>
         </PlayButton>
-        <PlaylistTable tracks={playlist.tracks} type={playlist.type} />
+        <PlaylistTable playlist={playlist} type={playlist.type} />
       </Layout>
     </>
   );

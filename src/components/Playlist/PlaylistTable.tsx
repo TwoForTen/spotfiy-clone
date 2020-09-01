@@ -2,10 +2,11 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
+import { PlaylistType } from 'src/pages/app/[playlistType]/[playlist]';
 import Track from './Track';
 
 interface Props {
-  tracks: [];
+  playlist: PlaylistType;
   type: TypeOfPlaylist;
 }
 
@@ -32,7 +33,7 @@ const TableHeader = styled.div`
   z-index: 2;
 `;
 
-const PlaylistTable: React.FC<Props> = ({ tracks, type }): JSX.Element => {
+const PlaylistTable: React.FC<Props> = ({ playlist, type }): JSX.Element => {
   const [trackSelected, setTrackSelected] = useState<number>(-1);
   return (
     <Table>
@@ -50,7 +51,7 @@ const PlaylistTable: React.FC<Props> = ({ tracks, type }): JSX.Element => {
           </svg>
         </span>
       </TableHeader>
-      {tracks.map((track: any, index: number) => {
+      {playlist.tracks.map((track: any, index: number) => {
         return (
           <Track
             onClick={() =>
@@ -63,6 +64,7 @@ const PlaylistTable: React.FC<Props> = ({ tracks, type }): JSX.Element => {
             trackSelected={trackSelected}
             index={index + 1}
             key={type === 'playlist' ? track.track?.id : track.id}
+            playlistUri={playlist.uri}
           />
         );
       })}
