@@ -4,16 +4,14 @@ import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
 import FooterPlayer from 'src/components/Player';
 import { UserPlaylists } from 'src/pages/_app';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { GlobalState } from 'src/store';
 import { storeDeviceId } from 'src/store/Device/actions';
 import {
   storeTrack,
   updatePosition,
   setVolume,
 } from 'src/store/PlayingNow/actions';
-import { PlayingNowState } from 'src/store/PlayingNow/types';
 
 type Props = {
   username: string;
@@ -27,9 +25,6 @@ const AppLayout: React.FC<Props> = ({
   accessToken,
 }): JSX.Element => {
   const dispatch = useDispatch();
-  const paused = useSelector<GlobalState, PlayingNowState['paused']>(
-    (state: GlobalState) => state.playingNow.paused
-  );
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -56,6 +51,7 @@ const AppLayout: React.FC<Props> = ({
           console.error(message);
         });
 
+        let trackPosition: number = -1;
         // Playback status updates
         player.addListener('player_state_changed', (state: any) => {
           dispatch(
@@ -73,23 +69,25 @@ const AppLayout: React.FC<Props> = ({
               paused: state.paused,
             })
           );
+
+          if (!state.paused) {
+            clearInterval(trackPosition);
+            trackPosition = setInterval(() => {
+              player.getCurrentState().then((positionState: any) => {
+                if (positionState) {
+                  dispatch(updatePosition(positionState.position));
+                }
+              });
+            }, 500);
+          } else {
+            clearInterval(trackPosition);
+          }
         });
 
         // Get Initial Volume
         player.getVolume().then((volume: number) => {
           dispatch(setVolume(volume));
         });
-
-        // Get Current Track Position
-        if (!paused) {
-          setInterval(() => {
-            player.getCurrentState().then((state: any) => {
-              if (state) {
-                dispatch(updatePosition(state.position));
-              }
-            });
-          }, 500);
-        }
 
         // Ready
         player.addListener('ready', ({ device_id }: any) => {
@@ -106,7 +104,7 @@ const AppLayout: React.FC<Props> = ({
         player.connect();
       };
     }
-  }, [paused]);
+  }, []);
   return (
     <>
       <Header username={username} />

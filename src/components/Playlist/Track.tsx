@@ -106,8 +106,8 @@ const Track: React.FC<Props> = ({
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [cookie] = useCookies(['access']);
-  const trackPosition = useSelector<GlobalState, PlayingNowState['position']>(
-    (state: GlobalState) => state.playingNow.position
+  const playingNow = useSelector<GlobalState, PlayingNowState>(
+    (state: GlobalState) => state.playingNow
   );
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
   const [trackHovered, setTrackHovered] = useState<boolean>(false);
@@ -124,7 +124,7 @@ const Track: React.FC<Props> = ({
         offset: {
           position: index - 1,
         },
-        position_ms: trackPosition,
+        position_ms: playingNow.position,
       }
     );
   };
