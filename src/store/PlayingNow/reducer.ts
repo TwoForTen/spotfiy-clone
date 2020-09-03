@@ -5,7 +5,7 @@ const initialState: PlayingNowState = {
     contextDescription: '',
     contextUri: '',
   },
-  duration: -1,
+  duration: 0,
   position: 0,
   paused: false,
   imageUrl: '',

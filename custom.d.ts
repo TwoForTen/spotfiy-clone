@@ -23,3 +23,8 @@ declare class Script {
 declare module 'react-load-script' {
   export = Script;
 }
+
+declare module '*.gif' {
+  const value: any;
+  export = value;
+}

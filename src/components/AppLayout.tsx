@@ -51,8 +51,8 @@ const AppLayout: React.FC<Props> = ({
           console.error(message);
         });
 
-        let trackPosition: number = -1;
         // Playback status updates
+        let trackPosition: number = -1;
         player.addListener('player_state_changed', (state: any) => {
           dispatch(
             storeTrack({
@@ -63,7 +63,9 @@ const AppLayout: React.FC<Props> = ({
               artists: state.track_window.current_track.artists,
               duration: state.duration,
               position: state.position,
-              id: state.track_window.current_track.id,
+              id:
+                state.track_window.current_track.linked_from.id ||
+                state.track_window.current_track.id,
               imageUrl: state.track_window.current_track.album.images[0].url,
               name: state.track_window.current_track.name,
               paused: state.paused,
@@ -78,7 +80,7 @@ const AppLayout: React.FC<Props> = ({
                   dispatch(updatePosition(positionState.position));
                 }
               });
-            }, 500);
+            }, 250);
           } else {
             clearInterval(trackPosition);
           }

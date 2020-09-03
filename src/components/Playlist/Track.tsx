@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
 
+import playingGif from 'src/assets/playingGif.gif';
+
 interface Props {
   track: any;
   index: number;
@@ -20,8 +22,12 @@ interface Props {
 }
 
 interface StyleProps {
-  $trackSelected: number;
-  $index: number;
+  $trackSelected?: number;
+  $index?: number;
+}
+
+interface ActiveTrack extends ThemeProp {
+  $activeTrack?: boolean;
 }
 
 const TrackContainer = styled.div`
@@ -77,7 +83,8 @@ const TrackInfoContainer = styled.div`
 `;
 
 const TrackTitle = styled.h5`
-  color: ${({ theme }: ThemeProp) => theme.colors.common.white};
+  color: ${({ theme, $activeTrack }: ActiveTrack) =>
+    $activeTrack ? theme.colors.primary.main : theme.colors.common.white};
   font-weight: 400;
   font-size: 15px;
 `;
@@ -124,7 +131,7 @@ const Track: React.FC<Props> = ({
         offset: {
           position: index - 1,
         },
-        position_ms: playingNow.position,
+        position_ms: playingNow.id === track.id ? playingNow.position : 0,
       }
     );
   };
@@ -137,7 +144,29 @@ const Track: React.FC<Props> = ({
       onMouseOver={() => setTrackHovered(true)}
       onMouseLeave={() => setTrackHovered(false)}
     >
-      {trackHovered || trackSelected === index ? (
+      {playingNow.id === track.id &&
+      (trackHovered || trackSelected === index) &&
+      !playingNow.paused ? (
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="22"
+            viewBox="0 0 24 24"
+            width="22"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white" />
+          </svg>
+        </span>
+      ) : playingNow.id === track.id ? (
+        <img
+          style={{ margin: '0 auto', position: 'relative' }}
+          src={playingGif}
+          alt=""
+          width={14}
+          height={14}
+        />
+      ) : trackHovered || trackSelected === index ? (
         <span onClick={playTrack}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +204,9 @@ const Track: React.FC<Props> = ({
           </ImageContainer>
         )}
         <div>
-          <TrackTitle>{track?.name}</TrackTitle>
+          <TrackTitle $activeTrack={playingNow.id == track?.id}>
+            {track?.name}
+          </TrackTitle>
           <TrackInfo $trackSelected={trackSelected} $index={index}>
             {track?.artists?.map((artist: any) => artist?.name).join(', ')}
           </TrackInfo>
