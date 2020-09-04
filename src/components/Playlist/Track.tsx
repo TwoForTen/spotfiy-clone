@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
+import { DeviceState } from 'src/store/Device/types';
 
 import playingGif from 'src/assets/playingGif.gif';
 
@@ -113,6 +114,9 @@ const Track: React.FC<Props> = ({
   const imgRef = useRef<HTMLImageElement>(null);
 
   const [cookie] = useCookies(['access']);
+  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
+    (state: GlobalState) => state.device.deviceId
+  );
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
@@ -123,9 +127,9 @@ const Track: React.FC<Props> = ({
     if (imgRef.current?.complete) setImgLoaded(true);
   }, []);
 
-  const playTrack = () => {
+  const playTrack = (): void => {
     axiosInstance(cookie.access.access_token).put(
-      '/me/player/play?device_id=9f72d6eb8ce3df03cdb63cb36ce81836e6549790',
+      `/me/player/play?device_id=${deviceId}`,
       {
         context_uri: playlistUri,
         offset: {
@@ -133,6 +137,12 @@ const Track: React.FC<Props> = ({
         },
         position_ms: playingNow.id === track.id ? playingNow.position : 0,
       }
+    );
+  };
+
+  const pauseTrack = (): void => {
+    axiosInstance(cookie.access.access_token).put(
+      `/me/player/pause?device_id=${deviceId}`
     );
   };
 
@@ -147,7 +157,7 @@ const Track: React.FC<Props> = ({
       {playingNow.id === track.id &&
       (trackHovered || trackSelected === index) &&
       !playingNow.paused ? (
-        <span>
+        <span onClick={pauseTrack}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="22"
@@ -158,7 +168,7 @@ const Track: React.FC<Props> = ({
             <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white" />
           </svg>
         </span>
-      ) : playingNow.id === track.id ? (
+      ) : playingNow.id === track.id && !playingNow.paused ? (
         <img
           style={{ margin: '0 auto', position: 'relative' }}
           src={playingGif}

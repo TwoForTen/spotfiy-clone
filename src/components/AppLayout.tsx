@@ -69,6 +69,10 @@ const AppLayout: React.FC<Props> = ({
               imageUrl: state.track_window.current_track.album.images[0].url,
               name: state.track_window.current_track.name,
               paused: state.paused,
+              nextTrack:
+                state.track_window.next_tracks.length > 0 ? true : false,
+              previousTrack:
+                state.track_window.previous_tracks.length > 0 ? true : false,
             })
           );
 

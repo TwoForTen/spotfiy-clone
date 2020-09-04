@@ -17,6 +17,8 @@ export interface PlayingNowState {
   id: string;
   name: string;
   volume?: number;
+  nextTrack: boolean;
+  previousTrack: boolean;
 }
 
 export interface StoreTrack {
