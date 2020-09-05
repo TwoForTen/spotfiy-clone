@@ -28,3 +28,17 @@ declare module '*.gif' {
   const value: any;
   export = value;
 }
+
+// declare module 'axios' {
+//   export interface AxiosRequestConfig {
+//     url: string;
+//     method: string;
+//     body: {
+//       position_ms?: number;
+//       context_uri?: string;
+//       offset: {
+//         position?: number;
+//       };
+//     };
+//   }
+// }

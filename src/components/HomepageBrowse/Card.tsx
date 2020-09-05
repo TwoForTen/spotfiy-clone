@@ -1,6 +1,11 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+import { useSelector } from 'react-redux';
+import { GlobalState } from 'src/store';
+import { PlayingNowState } from 'src/store/PlayingNow/types';
+import usePlayer from 'src/hooks/usePlayer';
+import { Options } from 'src/axiosInstance';
 
 interface Props {
   data: {
@@ -9,11 +14,13 @@ interface Props {
     imageUrl: string;
     description?: string;
     type?: string;
+    uri: string;
   };
 }
 
 interface StyleProps {
-  type?: string;
+  $type?: string;
+  $playingNow?: boolean;
 }
 
 const CardRoot = styled.figure`
@@ -34,7 +41,8 @@ const CardRoot = styled.figure`
 const PlayButton = styled.button`
   border-radius: 50%;
   background-color: ${({ theme }: ThemeProp) => theme.colors.primary.main};
-  display: none;
+  display: ${({ $playingNow }: StyleProps) =>
+    $playingNow ? 'flex !important' : 'none'};
   position: absolute;
   bottom: 0;
   right: 0;
@@ -54,7 +62,7 @@ const PlayButton = styled.button`
 `;
 
 const ImageContainer = styled.div`
-  border-radius: ${({ type }: StyleProps) => type === 'artist' && '50%'};
+  border-radius: ${({ $type }: StyleProps) => $type === 'artist' && '50%'};
   width: 100%;
   padding-bottom: 100%;
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
@@ -100,6 +108,25 @@ const Description = styled.small`
 
 const Card: React.FC<Props> = ({ data }): JSX.Element => {
   const router = useRouter();
+  const player = usePlayer();
+  const playingNow = useSelector<GlobalState, PlayingNowState>(
+    (state: GlobalState) => state.playingNow
+  );
+
+  const PAUSE_PLAYING: Options = {
+    url: '/me/player/pause',
+    method: 'put',
+  };
+  const START_PLAYLIST: Options = {
+    url: '/me/player/play',
+    method: 'put',
+    context_uri: data.uri,
+  };
+  const CONTINUE_PLAYING: Options = {
+    url: '/me/player/play',
+    method: 'put',
+    position_ms: playingNow.position,
+  };
 
   return (
     <CardRoot
@@ -110,23 +137,53 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
         )
       }
     >
-      <ImageContainer type={data.type}>
+      <ImageContainer $type={data.type}>
         <Image src={data.imageUrl} alt="" />
       </ImageContainer>
       <DescriptionContainer>
         <Title>{data.name}</Title>
         <Description>{data.description}</Description>
       </DescriptionContainer>
-      <PlayButton>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          height="24"
-          viewBox="0 0 24 24"
-          width="24"
-        >
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path d="M8 5v14l11-7z" fill="white" />
-        </svg>
+      <PlayButton
+        $playingNow={playingNow.context.contextUri === data.uri}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (
+            !playingNow.paused &&
+            playingNow.context.contextUri === data.uri
+          ) {
+            const { url, method } = PAUSE_PLAYING;
+            player({ url, method });
+          } else if (playingNow.context.contextUri !== data.uri) {
+            const { url, method, context_uri } = START_PLAYLIST;
+            player({ url, method, data: { context_uri } });
+          } else {
+            const { url, method, position_ms } = CONTINUE_PLAYING;
+            player({ url, method, data: { position_ms } });
+          }
+        }}
+      >
+        {!playingNow.paused && playingNow.context.contextUri === data.uri ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white" />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+          >
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path d="M8 5v14l11-7z" fill="white" />
+          </svg>
+        )}
       </PlayButton>
     </CardRoot>
   );

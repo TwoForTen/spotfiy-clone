@@ -24,6 +24,7 @@ export type BrowsePlaylist = {
     imageUrl: string;
     description?: string;
     type: TypeOfPlaylist;
+    uri: string;
   }[];
   description: {
     title: string;
@@ -139,6 +140,7 @@ SpotifyApp.getInitialProps = async (
                     imageUrl: item.images[0].url,
                     description: item.description,
                     type: item.type,
+                    uri: item.uri,
                   };
                 }),
                 description: {
@@ -155,6 +157,7 @@ SpotifyApp.getInitialProps = async (
                 imageUrl: item.images[0].url,
                 description: item.artists[0].name,
                 type: item.type,
+                uri: item.uri,
               };
             }),
             description: {
@@ -169,6 +172,7 @@ SpotifyApp.getInitialProps = async (
                 imageUrl: item.images[0].url,
                 description: item.type,
                 type: item.type,
+                uri: item.uri,
               };
             }),
             description: {

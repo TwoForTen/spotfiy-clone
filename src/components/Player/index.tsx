@@ -4,8 +4,8 @@ import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useCookies } from 'react-cookie';
-import axios from 'src/axiosInstance';
-
+import axios, { Options } from 'src/axiosInstance';
+import usePlayer from 'src/hooks/usePlayer';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
 import { DeviceState } from 'src/store/Device/types';
@@ -15,6 +15,7 @@ interface StyleProps {
   $max?: number;
   $sliderType?: SliderType;
   $width?: number;
+  disabled?: boolean;
 }
 
 enum SliderType {
@@ -119,11 +120,14 @@ const SkipButton = styled.button`
   padding: 4px;
   background-color: transparent;
   border-radius: 50%;
-  cursor: pointer;
+  cursor: ${({ disabled }: StyleProps) => (disabled ? 'initial' : 'pointer')};
   &:hover {
     > svg > path:last-child {
       fill: white;
     }
+  }
+  > svg > path:last-child {
+    fill: ${({ disabled }: StyleProps) => disabled && '#666 !important'};
   }
 `;
 
@@ -260,33 +264,26 @@ const FooterPlayer: React.FC = (): JSX.Element => {
   const [dragging, setDragging] = useState<boolean>(false);
   const [cookie] = useCookies(['access']);
 
-  const pausePlaying = useCallback((): void => {
-    axios(cookie.access.access_token)
-      .put(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`)
-      .catch(() => {});
-  }, [cookie.access?.access_token, deviceId]);
+  const player = usePlayer();
 
-  const continuePlaying = useCallback((): void => {
-    axios(cookie.access.access_token)
-      .put(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-        position_ms: playingNow.position,
-      })
-      .catch(() => {});
-  }, [cookie.access?.access_token, deviceId]);
+  const PAUSE_PLAYING: Options = {
+    url: '/me/player/pause',
+    method: 'put',
+  };
+  const CONTINUE_PLAYING: Options = {
+    url: '/me/player/play',
+    method: 'put',
+    position_ms: playingNow.position,
+  };
 
-  const skipNextTrack = useCallback((): void => {
-    axios(cookie.access.access_token)
-      .post(`https://api.spotify.com/v1/me/player/next?device_id=${deviceId}`)
-      .catch(() => {});
-  }, [cookie.access?.access_token, deviceId]);
-
-  const skipPreviousTrack = useCallback((): void => {
-    axios(cookie.access.access_token)
-      .post(
-        `https://api.spotify.com/v1/me/player/previous?device_id=${deviceId}`
-      )
-      .catch(() => {});
-  }, [cookie.access?.access_token, deviceId]);
+  const SKIP_NEXT_TRACK: Options = {
+    url: '/me/player/next',
+    method: 'post',
+  };
+  const SKIP_PREVIOUS_TRACK: Options = {
+    url: '/me/player/previous',
+    method: 'post',
+  };
 
   const sliderDrag = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -370,8 +367,13 @@ const FooterPlayer: React.FC = (): JSX.Element => {
       <TrackControlsContainer>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <SkipButton
-            onClick={skipPreviousTrack}
-            disabled={!!!deviceId || !!!playingNow.id}
+            onClick={() => {
+              const { url, method } = SKIP_PREVIOUS_TRACK;
+              player({ url, method });
+            }}
+            disabled={
+              !!!deviceId || !!!playingNow.id || !playingNow.previousTrack
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -384,10 +386,16 @@ const FooterPlayer: React.FC = (): JSX.Element => {
             </svg>
           </SkipButton>
           <PlayButton
-            onClick={playingNow.paused ? continuePlaying : pausePlaying}
-            disabled={
-              !!!deviceId || !!!playingNow.id || !playingNow.previousTrack
-            }
+            onClick={() => {
+              if (playingNow.paused) {
+                const { url, method, position_ms } = CONTINUE_PLAYING;
+                player({ url, method, data: { position_ms } });
+              } else {
+                const { url, method } = PAUSE_PLAYING;
+                player({ url, method });
+              }
+            }}
+            disabled={!!!deviceId || !!!playingNow.id}
           >
             {playingNow.paused ? (
               <svg
@@ -412,7 +420,10 @@ const FooterPlayer: React.FC = (): JSX.Element => {
             )}
           </PlayButton>
           <SkipButton
-            onClick={skipNextTrack}
+            onClick={() => {
+              const { url, method } = SKIP_NEXT_TRACK;
+              player({ url, method });
+            }}
             disabled={!!!deviceId || !!!playingNow.id || !playingNow.nextTrack}
           >
             <svg
@@ -435,7 +446,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
           }}
         >
           <PlayerSmallText>
-            {moment(trackPosition).format('m:ss')}
+            {moment(playingNow.position).format('m:ss')}
           </PlayerSmallText>
           <TrackSliderContainer>
             <div

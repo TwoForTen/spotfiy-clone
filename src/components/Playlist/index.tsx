@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import Header from './Header';
@@ -6,12 +5,10 @@ import PlaylistTable from './PlaylistTable';
 import Layout from 'src/components/Layout';
 import { PlaylistType } from 'src/pages/app/[playlistType]/[playlist]';
 import { useSelector } from 'react-redux';
-import { useCookies } from 'react-cookie';
-import axios from 'src/axiosInstance';
-
+import { Options } from 'src/axiosInstance';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
-import { DeviceState } from 'src/store/Device/types';
+import usePlayer from 'src/hooks/usePlayer';
 
 export interface Props {
   playlist: PlaylistType;
@@ -33,39 +30,50 @@ const PlayButton = styled.button`
 `;
 
 const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
-  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
-    (state: GlobalState) => state.device.deviceId
-  );
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
 
-  const [cookie] = useCookies(['access']);
+  const player = usePlayer();
 
-  const pausePlaying = useCallback((): void => {
-    axios(cookie.access.access_token)
-      .put(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`)
-      .catch(() => {});
-  }, [cookie.access?.access_token, deviceId]);
-
-  const continuePlaying = useCallback((): void => {
-    axios(cookie.access.access_token)
-      .put(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-        position_ms: playingNow.position,
-      })
-      .catch(() => {});
-  }, [cookie.access?.access_token, deviceId]);
-
-  // console.log(playlist);
+  const PAUSE_PLAYING: Options = {
+    url: '/me/player/pause',
+    method: 'put',
+  };
+  const START_PLAYLIST: Options = {
+    url: '/me/player/play',
+    method: 'put',
+    context_uri: playlist.uri,
+  };
+  const CONTINUE_PLAYING: Options = {
+    url: '/me/player/play',
+    method: 'put',
+    position_ms: playingNow.position,
+  };
 
   return (
     <>
       <Layout>
         <Header playlist={playlist} />
         <PlayButton
-          onClick={playingNow.paused ? continuePlaying : pausePlaying}
+          onClick={() => {
+            if (
+              !playingNow.paused &&
+              playingNow.context.contextUri === playlist.uri
+            ) {
+              const { url, method } = PAUSE_PLAYING;
+              player({ url, method });
+            } else if (playingNow.context.contextUri !== playlist.uri) {
+              const { url, method, context_uri } = START_PLAYLIST;
+              player({ url, method, data: { context_uri } });
+            } else {
+              const { url, method, position_ms } = CONTINUE_PLAYING;
+              player({ url, method, data: { position_ms } });
+            }
+          }}
         >
-          {playingNow.paused ? (
+          {!playingNow.paused &&
+          playingNow.context.contextUri === playlist.uri ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="38"
@@ -73,7 +81,7 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
               width="38"
             >
               <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M8 5v14l11-7z" fill="white" />
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white" />
             </svg>
           ) : (
             <svg
@@ -83,7 +91,7 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
               width="38"
             >
               <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white" />
+              <path d="M8 5v14l11-7z" fill="white" />
             </svg>
           )}
         </PlayButton>
