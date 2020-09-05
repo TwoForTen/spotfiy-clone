@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import Head from 'next/head';
 import App, { AppProps, AppContext } from 'next/app';
 import { ThemeProvider } from 'styled-components';
@@ -46,7 +45,7 @@ const MyApp = ({
         <CookiesProvider>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
-            {!!accessToken && (
+            {!!accessToken && router.pathname !== '/' && (
               <AppLayout
                 username={username}
                 playlists={playlists}

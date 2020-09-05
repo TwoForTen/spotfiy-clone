@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-const useAuth = (error: number | null) => {
+const useAuth = (error: number | null): void => {
   const router = useRouter();
   useEffect(() => {
     if (error) {

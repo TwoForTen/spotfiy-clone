@@ -3,13 +3,11 @@ import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
 import moment from 'moment';
-import axiosInstance from 'src/axiosInstance';
-import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
-
+import { Options } from 'src/axiosInstance';
+import usePlayer from 'src/hooks/usePlayer';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
-import { DeviceState } from 'src/store/Device/types';
 
 import playingGif from 'src/assets/playingGif.gif';
 
@@ -112,11 +110,7 @@ const Track: React.FC<Props> = ({
   playlistUri,
 }): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
-
-  const [cookie] = useCookies(['access']);
-  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
-    (state: GlobalState) => state.device.deviceId
-  );
+  const player = usePlayer();
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
@@ -127,23 +121,17 @@ const Track: React.FC<Props> = ({
     if (imgRef.current?.complete) setImgLoaded(true);
   }, []);
 
-  const playTrack = (): void => {
-    axiosInstance(cookie.access.access_token).put(
-      `/me/player/play?device_id=${deviceId}`,
-      {
-        context_uri: playlistUri,
-        offset: {
-          position: index - 1,
-        },
-        position_ms: playingNow.id === track.id ? playingNow.position : 0,
-      }
-    );
+  const PLAY_TRACK: Options = {
+    url: '/me/player/play',
+    method: 'put',
+    context_uri: playlistUri,
+    position: index - 1,
+    position_ms: playingNow.id === track.id ? playingNow.position : 0,
   };
 
-  const pauseTrack = (): void => {
-    axiosInstance(cookie.access.access_token).put(
-      `/me/player/pause?device_id=${deviceId}`
-    );
+  const PAUSE_TRACK: Options = {
+    url: '/me/player/pause',
+    method: 'put',
   };
 
   return (
@@ -157,7 +145,12 @@ const Track: React.FC<Props> = ({
       {playingNow.id === track.id &&
       (trackHovered || trackSelected === index) &&
       !playingNow.paused ? (
-        <span onClick={pauseTrack}>
+        <span
+          onClick={() => {
+            const { url, method } = PAUSE_TRACK;
+            player({ url, method });
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="22"
@@ -177,7 +170,22 @@ const Track: React.FC<Props> = ({
           height={14}
         />
       ) : trackHovered || trackSelected === index ? (
-        <span onClick={playTrack}>
+        <span
+          onClick={() => {
+            const {
+              url,
+              method,
+              position,
+              position_ms,
+              context_uri,
+            } = PLAY_TRACK;
+            player({
+              url,
+              method,
+              data: { context_uri, position_ms, offset: { position } },
+            });
+          }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="22"

@@ -12,6 +12,7 @@ import usePlayer from 'src/hooks/usePlayer';
 
 export interface Props {
   playlist: PlaylistType;
+  userFollowsPlaylist: boolean;
 }
 
 const PlayButton = styled.button`
@@ -29,7 +30,10 @@ const PlayButton = styled.button`
   }
 `;
 
-const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
+const Playlist: React.FC<Props> = ({
+  playlist,
+  userFollowsPlaylist,
+}): JSX.Element => {
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );

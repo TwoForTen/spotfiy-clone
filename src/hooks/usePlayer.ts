@@ -7,7 +7,7 @@ import { GlobalState } from 'src/store';
 import { DeviceState } from 'src/store/Device/types';
 import useAuth from 'src/hooks/useAuth';
 
-const usePlayer = () => {
+const usePlayer = (): ((options: AxiosRequestConfig) => void) => {
   const [cookie] = useCookies(['access']);
   const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
     (state: GlobalState) => state.device.deviceId

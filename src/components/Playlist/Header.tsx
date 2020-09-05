@@ -1,14 +1,18 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Props } from './index';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import getAverageRGB, { RGB } from 'src/utils/getAverageRGB';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
+import { PlaylistType } from 'src/pages/app/[playlistType]/[playlist]';
 
 interface StyleProps extends ThemeProp {
   faded?: boolean;
   bgColor?: RGB;
   type?: string;
+}
+
+interface Props {
+  playlist: PlaylistType;
 }
 
 const animateGradient = keyframes`

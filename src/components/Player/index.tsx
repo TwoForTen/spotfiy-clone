@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useCookies } from 'react-cookie';
 import axios, { Options } from 'src/axiosInstance';
 import usePlayer from 'src/hooks/usePlayer';
+import useAuth from 'src/hooks/useAuth';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
 import { DeviceState } from 'src/store/Device/types';
@@ -263,8 +264,10 @@ const FooterPlayer: React.FC = (): JSX.Element => {
   const [previousVolume, setPreviousVolume] = useState<number>(volume);
   const [dragging, setDragging] = useState<boolean>(false);
   const [cookie] = useCookies(['access']);
+  const [error, setError] = useState<number>(-1);
 
   const player = usePlayer();
+  useAuth(error);
 
   const PAUSE_PLAYING: Options = {
     url: '/me/player/pause',
@@ -301,9 +304,11 @@ const FooterPlayer: React.FC = (): JSX.Element => {
     (e: React.MouseEvent<HTMLInputElement>): void => {
       const target = e.target as HTMLInputElement;
       setTrackPosition(+target.value);
-      axios(cookie.access.access_token).put(
-        `/me/player/seek?device_id=${deviceId}&position_ms=${target.value}`
-      );
+      axios(cookie.access.access_token)
+        .put(
+          `/me/player/seek?device_id=${deviceId}&position_ms=${target.value}`
+        )
+        .catch((e) => setError(e.response.data.error.status));
       setDragging(false);
     },
     [cookie.access?.access_token, deviceId]
@@ -313,9 +318,11 @@ const FooterPlayer: React.FC = (): JSX.Element => {
     (e: React.MouseEvent<HTMLInputElement>): void => {
       const target = e.target as HTMLInputElement;
       setVolume(+target.value);
-      axios(cookie.access.access_token).put(
-        `/me/player/volume?device_id=${deviceId}&volume_percent=${target.value}`
-      );
+      axios(cookie.access.access_token)
+        .put(
+          `/me/player/volume?device_id=${deviceId}&volume_percent=${target.value}`
+        )
+        .catch((e) => setError(e.response.data.error.status));
       setDragging(false);
     },
     [cookie.access?.access_token, deviceId]
@@ -330,9 +337,11 @@ const FooterPlayer: React.FC = (): JSX.Element => {
       return previousVolume;
     });
     const newVolume: number = volume > 0 ? 0 : previousVolume;
-    axios(cookie.access.access_token).put(
-      `/me/player/volume?device_id=${deviceId}&volume_percent=${newVolume}`
-    );
+    axios(cookie.access.access_token)
+      .put(
+        `/me/player/volume?device_id=${deviceId}&volume_percent=${newVolume}`
+      )
+      .catch((e) => setError(e.response.data.error.status));
   }, [deviceId, volume, cookie.access?.access_token]);
 
   useEffect((): void => {
