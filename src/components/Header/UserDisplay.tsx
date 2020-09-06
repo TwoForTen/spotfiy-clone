@@ -2,10 +2,9 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import UserDropdown from './UserDropdown';
-
-interface Props {
-  username: string;
-}
+import { useSelector } from 'react-redux';
+import { GlobalState } from 'src/store';
+import { UserState } from 'src/store/User/types';
 
 interface StyleProps extends ThemeProp {
   clicked?: boolean;
@@ -39,7 +38,10 @@ const StyledUsername = styled.span`
   font-weight: bold;
 `;
 
-const UserDisplay: React.FC<Props> = ({ username }): JSX.Element => {
+const UserDisplay: React.FC = (): JSX.Element => {
+  const username = useSelector<GlobalState, UserState['username']>(
+    (state: GlobalState) => state.user.username
+  );
   const [clicked, setClicked] = useState<boolean>(false);
 
   return (

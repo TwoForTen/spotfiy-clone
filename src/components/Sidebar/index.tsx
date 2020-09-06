@@ -3,17 +3,13 @@ import styled from 'styled-components';
 import StyledSidebar from './StyledSidebar';
 import NavLinks from './NavLinks';
 
-import { UserPlaylists } from 'src/pages/app';
-
-interface Props {
-  playlists: UserPlaylists;
-}
+import { UserPlaylists } from 'src/pages/_app';
 
 const LogoContainer = styled.div`
   padding: 0px 16px;
 `;
 
-const Sidebar: React.FC<Props> = ({ playlists }): JSX.Element => {
+const Sidebar: React.FC = (): JSX.Element => {
   return (
     <StyledSidebar>
       <LogoContainer>
@@ -25,7 +21,7 @@ const Sidebar: React.FC<Props> = ({ playlists }): JSX.Element => {
           ></path>
         </svg>
       </LogoContainer>
-      <NavLinks playlists={playlists} />
+      <NavLinks />
     </StyledSidebar>
   );
 };

@@ -1,17 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
-
-import { BrowsePlaylist } from 'src/pages/app';
-
-interface Props {
-  playlists: {
-    id: string;
-    name: string;
-  }[];
-}
+import { useSelector } from 'react-redux';
+import { GlobalState } from 'src/store';
+import { UserState } from 'src/store/User/types';
 
 interface StyleProps extends ThemeProp {
   selected?: boolean;
@@ -124,9 +117,11 @@ const links: Links = [
   },
 ];
 
-const NavLinks: React.FC<Props> = ({ playlists }): JSX.Element => {
+const NavLinks: React.FC = (): JSX.Element => {
   const router = useRouter();
-
+  const playlists = useSelector<GlobalState, UserState['playlists']>(
+    (state: GlobalState) => state.user.playlists
+  );
   return (
     <>
       <Nav>

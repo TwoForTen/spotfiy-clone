@@ -10,23 +10,22 @@ import axios from 'axios';
 import { Cookie } from 'src/interfaces/Cookie';
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
-
 import { useRouter } from 'next/router';
 
 import AppLayout from 'src/components/AppLayout';
 
 type InitialProps = {
   username: string;
-  playlists: UserPlaylists;
+  playlists: UserPlaylist[];
   accessToken: string;
 };
 
 type Props = AppProps & InitialProps;
 
-export type UserPlaylists = {
+export type UserPlaylist = {
   id: string;
   name: string;
-}[];
+};
 
 const MyApp = ({
   Component,
@@ -36,6 +35,7 @@ const MyApp = ({
   accessToken,
 }: Props): JSX.Element => {
   const router = useRouter();
+
   return (
     <>
       <Head>
@@ -71,7 +71,7 @@ MyApp.getInitialProps = async (
     '';
 
   let username: string = '';
-  let playlists: UserPlaylists = [];
+  let playlists: UserPlaylist[] = [];
 
   const getUser = () => axiosInstance(cookie.access_token).get('/me');
 

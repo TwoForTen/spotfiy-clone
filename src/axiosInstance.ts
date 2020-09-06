@@ -1,8 +1,8 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, Method } from 'axios';
 
 export interface Options {
   url: string;
-  method: 'get' | 'put' | 'post';
+  method: Method;
   position_ms?: number;
   context_uri?: string;
   position?: number;

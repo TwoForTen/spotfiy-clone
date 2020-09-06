@@ -5,6 +5,9 @@ import { DeviceState } from './Device/types';
 import playingNowReducer from './PlayingNow/reducer';
 import { PlayingNowState } from './PlayingNow/types';
 
+import userReducer from './User/reducer';
+import { UserState } from './User/types';
+
 declare global {
   interface Window {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
@@ -19,11 +22,13 @@ const composeEnhancers =
 export interface GlobalState {
   device: DeviceState;
   playingNow: PlayingNowState;
+  user: UserState;
 }
 
 const reducers = combineReducers({
   device: deviceReducer,
   playingNow: playingNowReducer,
+  user: userReducer,
 });
 
 const store = createStore(reducers, composeEnhancers());

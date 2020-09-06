@@ -24,24 +24,14 @@ export type PlaylistType = {
 interface Props {
   playlist: PlaylistType;
   error: number | null;
-  userFollowsPlaylist: boolean;
 }
 
-const Playlist: NextPage<Props> = ({
-  playlist,
-  error,
-  userFollowsPlaylist,
-}): JSX.Element | null => {
+const Playlist: NextPage<Props> = ({ playlist, error }): JSX.Element | null => {
   useAuth(error);
 
   if (error) return null;
 
-  return (
-    <PlaylistComponent
-      playlist={playlist}
-      userFollowsPlaylist={userFollowsPlaylist}
-    />
-  );
+  return <PlaylistComponent playlist={playlist} />;
 };
 
 Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
@@ -60,7 +50,6 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     type: undefined,
     uri: '',
   };
-  let userFollowsPlaylist: boolean = false;
   let error: number | null = null;
 
   try {
@@ -88,17 +77,6 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
         type: res.data.type,
         uri: res.data.uri,
       };
-
-      if (context.query.playlistType === 'playlist') {
-        await axiosInstance(cookie.access_token)
-          .get(`https://api.spotify.com/v1/me/playlists`)
-          .then((response) => {
-            response.data.items.map((item: any) => {
-              if (item.id === context.query.playlist)
-                userFollowsPlaylist = true;
-            });
-          });
-      }
     } else {
       throw { response: { data: { error: { status: 404 } } } };
     }
@@ -106,7 +84,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     error = e.response.data.error.status;
   }
 
-  return { playlist, error, userFollowsPlaylist };
+  return { playlist, error };
 };
 
 export default Playlist;

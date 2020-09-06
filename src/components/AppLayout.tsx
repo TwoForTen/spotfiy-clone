@@ -5,7 +5,7 @@ import Sidebar from 'src/components/Sidebar';
 import FooterPlayer from 'src/components/Player';
 import { UserPlaylists } from 'src/pages/_app';
 import { useDispatch } from 'react-redux';
-
+import { storeUser } from 'src/store/User/actions';
 import { storeDeviceId } from 'src/store/Device/actions';
 import {
   storeTrack,
@@ -25,6 +25,10 @@ const AppLayout: React.FC<Props> = ({
   accessToken,
 }): JSX.Element => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(storeUser({ username, playlists }));
+  }, [username, playlists]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -113,8 +117,8 @@ const AppLayout: React.FC<Props> = ({
   }, []);
   return (
     <>
-      <Header username={username} />
-      <Sidebar playlists={playlists} />
+      <Header />
+      <Sidebar />
       <FooterPlayer />
       <Script url="https://sdk.scdn.co/spotify-player.js" onLoad={() => {}} />
     </>
