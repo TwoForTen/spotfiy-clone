@@ -260,11 +260,23 @@ const FooterPlayer: React.FC = (): JSX.Element => {
   const [trackPosition, setTrackPosition] = useState<number>(
     playingNow.position
   );
+  const [updatePosition, setUpdatePosition] = useState<number>(-1);
   const [volume, setVolume] = useState<number>(playingNow.volume || 75);
   const [previousVolume, setPreviousVolume] = useState<number>(volume);
   const [dragging, setDragging] = useState<boolean>(false);
   const [cookie] = useCookies(['access']);
   const [error, setError] = useState<number>(-1);
+
+  useEffect(() => {
+    clearInterval(updatePosition);
+    if (!playingNow.paused && !dragging) {
+      setUpdatePosition(
+        setInterval(() => {
+          setTrackPosition((prevState) => prevState + 250);
+        }, 250)
+      );
+    }
+  }, [playingNow.paused, dragging]);
 
   const player = usePlayer();
   useAuth(error);
@@ -290,10 +302,10 @@ const FooterPlayer: React.FC = (): JSX.Element => {
 
   const sliderDrag = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
-      setDragging(true);
       if (e.target.name === 'volume') {
         setVolume(+e.target.value);
       } else {
+        setDragging(true);
         setTrackPosition(+e.target.value);
       }
     },
@@ -323,7 +335,6 @@ const FooterPlayer: React.FC = (): JSX.Element => {
           `/me/player/volume?device_id=${deviceId}&volume_percent=${target.value}`
         )
         .catch((e) => setError(e.response.data.error.status));
-      setDragging(false);
     },
     [cookie.access?.access_token, deviceId]
   );
@@ -455,7 +466,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
           }}
         >
           <PlayerSmallText>
-            {moment(playingNow.position).format('m:ss')}
+            {moment(trackPosition).format('m:ss')}
           </PlayerSmallText>
           <TrackSliderContainer>
             <div
@@ -476,7 +487,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
                 disabled={!!!deviceId || !!!playingNow.id}
               />
               <TrackPlayed
-                $min={playingNow.position}
+                $min={trackPosition}
                 $max={playingNow.duration}
                 $sliderType={SliderType.Track}
               />

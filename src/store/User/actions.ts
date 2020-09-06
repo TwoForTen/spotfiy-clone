@@ -11,7 +11,7 @@ export const storeUser = ({ username, playlists }: UserState): UserActions => {
 
 export const updatePlaylists = ({ id, name }: UserPlaylist): UserActions => {
   return {
-    type: UserTypes.UPDATE_PLAYISTS,
+    type: UserTypes.UPDATE_PLAYLISTS,
     id,
     name,
   };

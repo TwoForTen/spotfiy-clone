@@ -2,7 +2,7 @@ import { UserPlaylist } from 'src/pages/_app';
 
 export enum UserTypes {
   STORE_USER = 'STORE_USER',
-  UPDATE_PLAYISTS = 'UPDATE_PLAYLISTS',
+  UPDATE_PLAYLISTS = 'UPDATE_PLAYLISTS',
 }
 
 export interface UserState {
@@ -17,7 +17,7 @@ export interface StoreUser {
 }
 
 export interface UpdatePlaylists {
-  type: UserTypes.UPDATE_PLAYISTS;
+  type: UserTypes.UPDATE_PLAYLISTS;
   id: string;
   name: string;
 }

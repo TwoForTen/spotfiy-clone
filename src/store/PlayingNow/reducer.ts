@@ -7,12 +7,14 @@ const initialState: PlayingNowState = {
   },
   duration: 0,
   position: 0,
-  paused: false,
+  paused: true,
   imageUrl: '',
   artists: [],
   id: '',
   name: '',
   volume: 75,
+  nextTrack: false,
+  previousTrack: false,
 };
 
 const playingNowReducer = (

@@ -3,7 +3,7 @@ import Script from 'react-load-script';
 import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
 import FooterPlayer from 'src/components/Player';
-import { UserPlaylists } from 'src/pages/_app';
+import { UserPlaylist } from 'src/pages/_app';
 import { useDispatch } from 'react-redux';
 import { storeUser } from 'src/store/User/actions';
 import { storeDeviceId } from 'src/store/Device/actions';
@@ -15,7 +15,7 @@ import {
 
 type Props = {
   username: string;
-  playlists: UserPlaylists;
+  playlists: UserPlaylist[];
   accessToken: string;
 };
 
@@ -56,7 +56,6 @@ const AppLayout: React.FC<Props> = ({
         });
 
         // Playback status updates
-        let trackPosition: number = -1;
         player.addListener('player_state_changed', (state: any) => {
           dispatch(
             storeTrack({
@@ -80,18 +79,11 @@ const AppLayout: React.FC<Props> = ({
             })
           );
 
-          if (!state.paused) {
-            clearInterval(trackPosition);
-            trackPosition = setInterval(() => {
-              player.getCurrentState().then((positionState: any) => {
-                if (positionState) {
-                  dispatch(updatePosition(positionState.position));
-                }
-              });
-            }, 250);
-          } else {
-            clearInterval(trackPosition);
-          }
+          player.getCurrentState().then((positionState: any) => {
+            if (positionState) {
+              dispatch(updatePosition(positionState.position));
+            }
+          });
         });
 
         // Get Initial Volume

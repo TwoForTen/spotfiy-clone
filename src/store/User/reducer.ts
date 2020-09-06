@@ -14,19 +14,20 @@ const userReducer = (state = initialState, action: UserActions): UserState => {
         username,
         playlists,
       };
-    case UserTypes.UPDATE_PLAYISTS:
+    case UserTypes.UPDATE_PLAYLISTS:
       const { id, name } = action;
-      if (state.playlists.some((playlist) => playlist.id === id)) {
+      if (state.playlists.some((playlist: UserPlaylist) => playlist.id === id))
         return {
           ...state,
-          playlists: state.playlists.filter((playlist) => playlist.id !== id),
+          playlists: state.playlists.filter(
+            (playlist: UserPlaylist) => playlist.id !== id
+          ),
         };
-      } else {
+      else
         return {
           ...state,
           playlists: [{ id, name }, ...state.playlists],
         };
-      }
     default:
       return state;
   }
