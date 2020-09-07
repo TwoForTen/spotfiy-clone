@@ -2,8 +2,10 @@ import { PlayingNowActions, PlayingNowState, PlayingNowTypes } from './types';
 
 const initialState: PlayingNowState = {
   context: {
-    contextDescription: '',
-    contextUri: '',
+    description: '',
+    uri: '',
+    id: '',
+    type: '',
   },
   duration: 0,
   position: 0,

@@ -10,6 +10,7 @@ import useAuth from 'src/hooks/useAuth';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
 import { DeviceState } from 'src/store/Device/types';
+import { useRouter } from 'next/router';
 
 interface StyleProps {
   $min?: number;
@@ -49,6 +50,7 @@ const TrackInfoContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 `;
 
 const ImageContainer = styled.div`
@@ -250,6 +252,8 @@ const TextSkeleton = styled.div`
 `;
 
 const FooterPlayer: React.FC = (): JSX.Element => {
+  const router = useRouter();
+
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
@@ -361,7 +365,15 @@ const FooterPlayer: React.FC = (): JSX.Element => {
 
   return (
     <PlayerContainer>
-      <TrackInfoContainer>
+      <TrackInfoContainer
+        onClick={() =>
+          playingNow.context.type !== '' &&
+          router.push(
+            '/app/[playlistType]/[playlist]',
+            `/app/${playingNow.context.type}/${playingNow.context.id}`
+          )
+        }
+      >
         <ImageContainer>
           {playingNow.imageUrl !== '' ? (
             <Image src={playingNow.imageUrl} alt="" />

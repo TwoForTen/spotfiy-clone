@@ -6,8 +6,10 @@ export enum PlayingNowTypes {
 
 export interface PlayingNowState {
   context: {
-    contextDescription: string;
-    contextUri: string;
+    description: string;
+    uri: string;
+    id: string;
+    type: string;
   };
   duration: number;
   position: number;

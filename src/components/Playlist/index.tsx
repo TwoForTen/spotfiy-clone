@@ -83,13 +83,10 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
         <Header playlist={playlist} />
         <PlayButton
           onClick={() => {
-            if (
-              !playingNow.paused &&
-              playingNow.context.contextUri === playlist.uri
-            ) {
+            if (!playingNow.paused && playingNow.context.uri === playlist.uri) {
               const { url, method } = PAUSE_PLAYING;
               player({ url, method });
-            } else if (playingNow.context.contextUri !== playlist.uri) {
+            } else if (playingNow.context.uri !== playlist.uri) {
               const { url, method, context_uri } = START_PLAYLIST;
               player({ url, method, data: { context_uri } });
             } else {
@@ -98,8 +95,7 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
             }
           }}
         >
-          {!playingNow.paused &&
-          playingNow.context.contextUri === playlist.uri ? (
+          {!playingNow.paused && playingNow.context.uri === playlist.uri ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="36"

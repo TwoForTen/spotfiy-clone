@@ -21,6 +21,7 @@ const TracksTitleContainer = styled.div`
 const BrowseTitle = styled.h2`
   color: ${({ theme }: ThemeProp) => theme.colors.common.white};
   padding: 4px 0;
+  text-transform: capitalize;
 `;
 
 const Subtitle = styled.span`
@@ -43,7 +44,7 @@ const Title: React.FC<Props> = ({ description }): JSX.Element => {
   return (
     <TracksTitleContainer>
       <div>
-        <BrowseTitle>{description.title}</BrowseTitle>
+        <BrowseTitle>{description.title.replace(/\_/g, ' ')}</BrowseTitle>
         <Subtitle>{description.description}</Subtitle>
       </div>
       <SeeAll>See all</SeeAll>

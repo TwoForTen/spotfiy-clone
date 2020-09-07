@@ -60,8 +60,10 @@ const AppLayout: React.FC<Props> = ({
           dispatch(
             storeTrack({
               context: {
-                contextDescription: state.context.metadata.context_description,
-                contextUri: state.context.uri,
+                description: state.context.metadata.context_description,
+                uri: state.context.uri,
+                id: state.context.uri?.split(':')[2] || '',
+                type: state.context.uri?.split(':')[1] || '',
               },
               artists: state.track_window.current_track.artists,
               duration: state.duration,

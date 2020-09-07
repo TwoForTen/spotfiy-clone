@@ -137,7 +137,7 @@ SpotifyApp.getInitialProps = async (
                   };
                 }),
                 description: {
-                  title: 'a',
+                  title: category.config.url?.split('/')[3] || '',
                 },
               };
             }

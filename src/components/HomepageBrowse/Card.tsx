@@ -145,16 +145,13 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
         <Description>{data.description}</Description>
       </DescriptionContainer>
       <PlayButton
-        $playingNow={playingNow.context.contextUri === data.uri}
+        $playingNow={playingNow.context.uri === data.uri}
         onClick={(e) => {
           e.stopPropagation();
-          if (
-            !playingNow.paused &&
-            playingNow.context.contextUri === data.uri
-          ) {
+          if (!playingNow.paused && playingNow.context.uri === data.uri) {
             const { url, method } = PAUSE_PLAYING;
             player({ url, method });
-          } else if (playingNow.context.contextUri !== data.uri) {
+          } else if (playingNow.context.uri !== data.uri) {
             const { url, method, context_uri } = START_PLAYLIST;
             player({ url, method, data: { context_uri } });
           } else {
@@ -163,7 +160,7 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
           }
         }}
       >
-        {!playingNow.paused && playingNow.context.contextUri === data.uri ? (
+        {!playingNow.paused && playingNow.context.uri === data.uri ? (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24"

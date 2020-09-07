@@ -21,7 +21,7 @@ const createPlaylistObj = (obj: any, type: string): BrowsePlaylist => {
       return {
         id: item.id,
         name: item.name,
-        imageUrl: item.images[0].url,
+        imageUrl: item.images[0]?.url || '',
         description: item.type === 'playlist' ? item.description : item.type,
         type: item.type,
         uri: item.uri,

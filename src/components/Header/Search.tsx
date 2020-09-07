@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { useCookies } from 'react-cookie';
 import axios from 'src/axiosInstance';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { debounce } from 'lodash';
 import { storeSearch } from 'src/store/Search/actions';
 import { useDispatch } from 'react-redux';
@@ -77,6 +77,13 @@ const Search: React.FC = (): JSX.Element => {
     }, THROTTLE_TIME),
     []
   );
+
+  useEffect((): (() => void) => {
+    return () =>
+      dispatch(
+        storeSearch({ albums: [], artists: [], playlists: [], tracks: [] })
+      );
+  }, []);
 
   return (
     <>
