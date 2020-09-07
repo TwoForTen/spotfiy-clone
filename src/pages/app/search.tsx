@@ -5,10 +5,11 @@ import Browse from 'src/components/HomepageBrowse';
 import { useSelector } from 'react-redux';
 import { GlobalState } from 'src/store';
 import { SearchState } from 'src/store/Search/types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { isEmpty } from 'lodash';
-
+import useAuth from 'src/hooks/useAuth';
+import { useCookies } from 'react-cookie';
 import { BrowsePlaylist } from 'src/pages/app';
 
 const Container = styled.div`
@@ -39,6 +40,14 @@ const Search = () => {
   );
 
   const [trackSelected, setTrackSelected] = useState<number>(-1);
+  const [error, setError] = useState<number>(-1);
+  const [cookie] = useCookies(['access']);
+
+  useAuth(error);
+
+  useEffect(() => {
+    if (!!!cookie.access?.access_token) setError(401);
+  }, [cookie]);
 
   return (
     <Layout>

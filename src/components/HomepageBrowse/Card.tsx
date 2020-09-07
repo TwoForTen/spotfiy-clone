@@ -131,10 +131,12 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
   return (
     <CardRoot
       onClick={() =>
-        router.push(
-          `/app/[playlistType]/[playlist]`,
-          `/app/${data.type}/${data.id}`
-        )
+        data.type === 'artist'
+          ? router.push(`/app/artist/[artist]`, `/app/${data.type}/${data.id}`)
+          : router.push(
+              `/app/[playlistType]/[playlist]`,
+              `/app/${data.type}/${data.id}`
+            )
       }
     >
       <ImageContainer $type={data.type}>

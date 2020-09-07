@@ -32,7 +32,7 @@ const getAverageRGB = (imgEl: HTMLImageElement): RGB => {
   try {
     data = context.getImageData(0, 0, width, height);
   } catch (e) {
-    /* security error, img on diff domain */ alert('v');
+    /* security error, img on diff domain */
     return defaultRGB;
   }
 
