@@ -31,11 +31,6 @@ export type BrowsePlaylist = {
     description?: string;
   };
 };
-
-const Wrapper = styled.div`
-  padding-bottom: ${({ theme }: ThemeProp) => theme.shape.ui.footer.height};
-`;
-
 const SpotifyApp: NextPage<Props> = ({
   browsePlaylists,
   error,
@@ -46,11 +41,9 @@ const SpotifyApp: NextPage<Props> = ({
 
   return (
     <Layout>
-      <Wrapper>
-        {browsePlaylists.map((playlist, index) => {
-          return <HomepageBrowse playlist={playlist} key={index} />;
-        })}
-      </Wrapper>
+      {browsePlaylists.map((playlist, index) => {
+        return <HomepageBrowse playlist={playlist} key={index} />;
+      })}
     </Layout>
   );
 };

@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import StyledSidebar from './StyledSidebar';
 import NavLinks from './NavLinks';
 
-import { UserPlaylists } from 'src/pages/_app';
-
 const LogoContainer = styled.div`
   padding: 0px 16px;
 `;

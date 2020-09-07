@@ -47,6 +47,8 @@ Profile.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     owner: '',
     playlistCount: 0,
     type: undefined,
+    uri: '',
+    tracks: [],
   };
   let playlists: BrowsePlaylist = {
     items: [],
@@ -65,11 +67,10 @@ Profile.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     .then(
       axios.spread((user, userPlaylists) => {
         playlist = {
+          ...playlist,
           id: user.data.id,
           imageUrl: user.data?.images[0]?.url ? user.data.images[0].url : '',
           name: user.data.display_name,
-          description: '',
-          owner: '',
           playlistCount: userPlaylists.data.items.length,
           type: user.data.type,
         };
@@ -81,6 +82,7 @@ Profile.getInitialProps = async (context: NextPageContext): Promise<Props> => {
               imageUrl: item.images[0].url,
               description: item.type,
               type: item.type,
+              uri: item.uri,
             };
           }),
           description: {

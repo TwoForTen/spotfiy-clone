@@ -17,7 +17,8 @@ interface Props {
   type: TypeOfPlaylist;
   onClick: () => void;
   trackSelected: number;
-  playlistUri: string;
+  playlistUri?: string;
+  trackUri?: string[];
 }
 
 interface StyleProps {
@@ -108,6 +109,7 @@ const Track: React.FC<Props> = ({
   onClick,
   trackSelected,
   playlistUri,
+  trackUri,
 }): JSX.Element => {
   const imgRef = useRef<HTMLImageElement>(null);
   const player = usePlayer();
@@ -125,6 +127,7 @@ const Track: React.FC<Props> = ({
     url: '/me/player/play',
     method: 'put',
     context_uri: playlistUri,
+    uris: trackUri,
     position: index - 1,
     position_ms: playingNow.id === track.id ? playingNow.position : 0,
   };
@@ -178,11 +181,17 @@ const Track: React.FC<Props> = ({
               position,
               position_ms,
               context_uri,
+              uris,
             } = PLAY_TRACK;
             player({
               url,
               method,
-              data: { context_uri, position_ms, offset: { position } },
+              data: {
+                uris,
+                context_uri,
+                position_ms,
+                offset: type !== 'track' ? { position } : undefined,
+              },
             });
           }}
         >
@@ -206,7 +215,7 @@ const Track: React.FC<Props> = ({
         </TrackInfo>
       )}
       <TrackInfoContainer>
-        {type === 'playlist' && (
+        {type !== 'album' && (
           <ImageContainer>
             <Image
               loading="lazy"

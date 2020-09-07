@@ -5,6 +5,7 @@ export interface Options {
   method: Method;
   position_ms?: number;
   context_uri?: string;
+  uris?: string[];
   position?: number;
 }
 

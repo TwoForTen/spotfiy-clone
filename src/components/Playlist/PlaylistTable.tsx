@@ -12,7 +12,6 @@ interface Props {
 
 const Table = styled.div`
   margin: 35px;
-  padding-bottom: ${({ theme }: ThemeProp) => theme.shape.ui.footer.height};
 `;
 
 const TableHeader = styled.div`
