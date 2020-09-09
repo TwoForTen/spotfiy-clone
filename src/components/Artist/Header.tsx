@@ -50,9 +50,9 @@ const BackgroundImage = styled.div`
 
 const HeaderContainer = styled.div`
   display: flex;
-  height: 100%;
+  height: 340px;
   align-items: flex-end;
-  margin: 0px 35px;
+  margin: 0 35px 35px;
   padding-bottom: 35px;
   position: relative;
   z-index: 2;
@@ -72,7 +72,8 @@ const Description = styled.small`
 
 const Header: React.FC<Props> = ({ info }): JSX.Element => {
   return (
-    <BackgroundImage $bgImage={info.imageUrl}>
+    <>
+      <BackgroundImage $bgImage={info.imageUrl} />
       <HeaderContainer>
         <div>
           <Description>{info.type?.toUpperCase()}</Description>
@@ -83,7 +84,7 @@ const Header: React.FC<Props> = ({ info }): JSX.Element => {
           </Description>
         </div>
       </HeaderContainer>
-    </BackgroundImage>
+    </>
   );
 };
 

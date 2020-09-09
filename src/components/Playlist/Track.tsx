@@ -190,7 +190,9 @@ const Track: React.FC<Props> = ({
                 uris,
                 context_uri,
                 position_ms,
-                offset: type !== 'track' ? { position } : undefined,
+                offset:
+                  // @ts-expect-error
+                  !!context_uri || uris?.length > 2 ? { position } : undefined,
               },
             });
           }}

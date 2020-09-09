@@ -5,7 +5,11 @@ import axios from 'src/axiosInstance';
 import { useState, useCallback, useEffect } from 'react';
 import { debounce } from 'lodash';
 import { storeSearch } from 'src/store/Search/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { GlobalState } from 'src/store';
+import { SearchState } from 'src/store/Search/types';
+import { createPortal } from 'react-dom';
+import { isEmpty } from 'lodash';
 
 const SearchContainer = styled.div`
   width: 365px;
@@ -40,13 +44,34 @@ const ClearIcon = styled.span`
   margin: 0 12px;
 `;
 
+const Message = styled.div`
+  display: flex;
+  flex-direction: column;
+  line-height: 35px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: ${({ theme }: ThemeProp) => theme.colors.common.white};
+  padding-left: ${({ theme }: ThemeProp) => theme.shape.ui.sidebar.width};
+`;
+
 const THROTTLE_TIME = 600;
 
 const Search: React.FC = (): JSX.Element => {
   const dispatch = useDispatch();
+  const search = useSelector<GlobalState, SearchState>(
+    (state: GlobalState) => state.search
+  );
+  const { albums, tracks, playlists, artists } = search;
 
   const [cookie] = useCookies(['access']);
   const [query, setQuery] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [componentMounted, setComponentMounted] = useState<boolean>(false);
 
   const handleChange = useCallback(
     debounce((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,8 +92,11 @@ const Search: React.FC = (): JSX.Element => {
                 tracks: tracks.items,
               })
             );
+            setLoading(false);
           })
-          .catch(() => {});
+          .catch(() => {
+            setLoading(false);
+          });
       } else {
         dispatch(
           storeSearch({ albums: [], artists: [], playlists: [], tracks: [] })
@@ -79,6 +107,7 @@ const Search: React.FC = (): JSX.Element => {
   );
 
   useEffect((): (() => void) => {
+    setComponentMounted(true);
     return () =>
       dispatch(
         storeSearch({ albums: [], artists: [], playlists: [], tracks: [] })
@@ -107,6 +136,7 @@ const Search: React.FC = (): JSX.Element => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             e.persist();
             setQuery(e.target.value);
+            setLoading(true);
             handleChange(e);
           }}
         />
@@ -135,6 +165,23 @@ const Search: React.FC = (): JSX.Element => {
           </ClearIcon>
         )}
       </SearchContainer>
+      {componentMounted &&
+        query !== '' &&
+        isEmpty(albums) &&
+        isEmpty(tracks) &&
+        isEmpty(playlists) &&
+        isEmpty(artists) &&
+        !loading &&
+        createPortal(
+          <Message>
+            <h2>{`No results found for "${query}"`}</h2>
+            <small>
+              Please make sure your words are spelled correctly or use less or
+              different keywords.
+            </small>
+          </Message>,
+          document.getElementById('__next') || document.body
+        )}
     </>
   );
 };

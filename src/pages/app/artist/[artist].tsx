@@ -9,6 +9,7 @@ import ArtistComponent from 'src/components/Artist';
 
 interface Props {
   info: ArtistInfo;
+  topTracks: any[];
 }
 
 export interface ArtistInfo {
@@ -20,10 +21,10 @@ export interface ArtistInfo {
   type: string;
 }
 
-const Artist: NextPage<Props> = ({ info }): JSX.Element => {
+const Artist: NextPage<Props> = ({ info, topTracks }): JSX.Element => {
   return (
     <Layout>
-      <ArtistComponent info={info} />
+      <ArtistComponent topTracks={topTracks} info={info} />
     </Layout>
   );
 };
@@ -34,9 +35,6 @@ Artist.getInitialProps = async (context: NextPageContext) => {
     (context.query.access && JSON.parse(`${context.query.access}`)) ||
     '';
 
-  const getArtistInfo = () =>
-    axiosInstance(cookie.access_token).get(`/artists/${context.query.artist}`);
-
   let info: ArtistInfo = {
     id: '',
     name: '',
@@ -45,21 +43,35 @@ Artist.getInitialProps = async (context: NextPageContext) => {
     type: '',
     uri: '',
   };
+  let tracks: any[] = [];
 
-  await axios.all([getArtistInfo()]).then(
-    axios.spread((artistInfo) => {
-      info = {
-        id: artistInfo.data.id,
-        name: artistInfo.data.name,
-        followers: artistInfo.data.followers.total,
-        imageUrl: artistInfo.data.images[0]?.url,
-        type: artistInfo.data.type,
-        uri: artistInfo.data.uri,
-      };
-    })
-  );
+  const getArtistInfo = () =>
+    axiosInstance(cookie.access_token).get(`/artists/${context.query.artist}`);
 
-  return { info };
+  const getTopTracks = () =>
+    axiosInstance(cookie.access_token).get(
+      `/artists/${context.query.artist}/top-tracks?country=from_token`
+    );
+
+  await axios
+    .all([getArtistInfo(), getTopTracks()])
+    .then(
+      axios.spread((artistInfo, topTracks) => {
+        info = {
+          id: artistInfo.data.id,
+          name: artistInfo.data.name,
+          followers: artistInfo.data.followers.total,
+          imageUrl: artistInfo.data.images[0]?.url,
+          type: artistInfo.data.type,
+          uri: artistInfo.data.uri,
+        };
+
+        tracks = topTracks.data.tracks;
+      })
+    )
+    .catch((e) => console.log(e.response.data.error.message));
+
+  return { info, topTracks: tracks };
 };
 
 export default Artist;

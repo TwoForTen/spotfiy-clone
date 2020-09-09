@@ -11,6 +11,7 @@ import { isEmpty } from 'lodash';
 import useAuth from 'src/hooks/useAuth';
 import { useCookies } from 'react-cookie';
 import { BrowsePlaylist } from 'src/pages/app';
+import { NextPage } from 'next';
 
 const Container = styled.div`
   margin: 35px;
@@ -34,7 +35,7 @@ const createPlaylistObj = (obj: any, type: string): BrowsePlaylist => {
   };
 };
 
-const Search = () => {
+const Search: NextPage = (): JSX.Element => {
   const search = useSelector<GlobalState, SearchState>(
     (state: GlobalState) => state.search
   );
