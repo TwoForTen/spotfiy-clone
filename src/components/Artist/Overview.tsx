@@ -12,15 +12,14 @@ interface Props {
   albums: ArtistAlbum[];
 }
 
-const AlbumsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+const Container = styled.div`
   margin: 35px;
-  &:after {
-    content: '';
-    flex-basis: 620px;
-  }
+`;
+const AlbumsContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-gap: 10px;
+  margin: 30px 0;
 `;
 
 const Overview: React.FC<Props> = ({
@@ -31,7 +30,7 @@ const Overview: React.FC<Props> = ({
   const [trackSelected, setTrackSelected] = useState<number>(-1);
   return (
     <>
-      <div style={{ margin: 35 }}>
+      <Container>
         {!isEmpty(topTracks) && (
           <div>
             <Title description={{ title: 'Popular' }} seeAll={false} />
@@ -54,31 +53,33 @@ const Overview: React.FC<Props> = ({
             })}
           </div>
         )}
-      </div>
-      <AlbumsContainer>
-        <Title description={{ title: 'Albums' }} seeAll={false} />
-        {albums
-          .filter((album) => album.albumGroup === 'album')
-          .map((album: any) => {
-            return <PlaylistCard key={album.id} album={album} />;
-          })}
-      </AlbumsContainer>
-      <AlbumsContainer>
-        <Title description={{ title: 'Singles' }} seeAll={false} />
-        {albums
-          .filter((album) => album.albumGroup === 'single')
-          .map((album: any) => {
-            return <PlaylistCard key={album.id} album={album} />;
-          })}
-      </AlbumsContainer>
-      <AlbumsContainer>
-        <Title description={{ title: 'Appears on' }} seeAll={false} />
-        {albums
-          .filter((album) => album.albumGroup === 'appears_on')
-          .map((album: any) => {
-            return <PlaylistCard key={album.id} album={album} />;
-          })}
-      </AlbumsContainer>
+        <div style={{ margin: '25px 0' }}>
+          <Title description={{ title: 'Albums' }} seeAll={false} />
+          <AlbumsContainer>
+            {albums
+              .filter((album) => album.albumGroup === 'album')
+              .map((album: any) => {
+                return <PlaylistCard key={album.id} album={album} />;
+              })}
+          </AlbumsContainer>
+          <Title description={{ title: 'Singles' }} seeAll={false} />
+          <AlbumsContainer>
+            {albums
+              .filter((album) => album.albumGroup === 'single')
+              .map((album: any) => {
+                return <PlaylistCard key={album.id} album={album} />;
+              })}
+          </AlbumsContainer>
+          <Title description={{ title: 'Appears on' }} seeAll={false} />
+          <AlbumsContainer>
+            {albums
+              .filter((album) => album.albumGroup === 'appears_on')
+              .map((album: any) => {
+                return <PlaylistCard key={album.id} album={album} />;
+              })}
+          </AlbumsContainer>
+        </div>
+      </Container>
     </>
   );
 };

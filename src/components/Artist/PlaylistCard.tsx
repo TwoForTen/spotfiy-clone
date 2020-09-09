@@ -19,7 +19,6 @@ const StyledPlaylistCard = styled.div`
   width: min-content;
   height: 100%;
   position: relative;
-  margin: 10px;
 `;
 
 const ImageContainer = styled.div`
