@@ -28,7 +28,7 @@ const Home: NextPage<AccessResponse> = ({
   useEffect(() => {
     if (!!accessResponse) {
       setCookie('access', JSON.stringify(accessResponse), {
-        expires: moment().add(accessResponse.expires_in, 's').toDate(),
+        expires: moment().add(3600, 's').toDate(),
       });
       router.push(`/app?access=${JSON.stringify(accessResponse)}`, '/app');
     }

@@ -1,7 +1,7 @@
 import Header from './Header';
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
-import { ArtistInfo } from 'src/pages/app/artist/[artist]';
+import { ArtistInfo, ArtistAlbum } from 'src/pages/app/artist/[artist]';
 import usePlayer from 'src/hooks/usePlayer';
 import { useSelector } from 'react-redux';
 import { Options } from 'src/axiosInstance';
@@ -12,6 +12,7 @@ import Overview from './Overview';
 interface Props {
   info: ArtistInfo;
   topTracks: any;
+  albums: ArtistAlbum[];
 }
 
 interface StyleProps {
@@ -48,7 +49,11 @@ const TabButton = styled.button`
   cursor: pointer;
 `;
 
-const ArtistComponent: React.FC<Props> = ({ info, topTracks }): JSX.Element => {
+const ArtistComponent: React.FC<Props> = ({
+  info,
+  topTracks,
+  albums,
+}): JSX.Element => {
   const player = usePlayer();
 
   const playingNow = useSelector<GlobalState, PlayingNowState>(
@@ -115,6 +120,7 @@ const ArtistComponent: React.FC<Props> = ({ info, topTracks }): JSX.Element => {
       <Overview
         topTracks={topTracks}
         playlistUri={topTracks.map((track: any) => track.uri)}
+        albums={albums}
       />
     </>
   );
