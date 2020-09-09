@@ -39,6 +39,7 @@ const Search: NextPage = (): JSX.Element => {
   const search = useSelector<GlobalState, SearchState>(
     (state: GlobalState) => state.search
   );
+  const { albums, artists, playlists, tracks } = search;
 
   const [trackSelected, setTrackSelected] = useState<number>(-1);
   const [error, setError] = useState<number>(-1);
@@ -53,10 +54,10 @@ const Search: NextPage = (): JSX.Element => {
   return (
     <Layout>
       <Container>
-        {!isEmpty(search.tracks) && (
+        {!isEmpty(tracks) && (
           <div>
             <Title description={{ title: 'Tracks' }} />
-            {search.tracks.map((track: any, index: number) => {
+            {tracks.map((track: any, index: number) => {
               return (
                 <Track
                   key={track.id}
@@ -76,14 +77,14 @@ const Search: NextPage = (): JSX.Element => {
           </div>
         )}
       </Container>
-      {!isEmpty(search.albums) && (
-        <Browse playlist={createPlaylistObj(search.albums, 'Albums')} />
+      {!isEmpty(albums) && (
+        <Browse playlist={createPlaylistObj(albums, 'Albums')} />
       )}
-      {!isEmpty(search.playlists) && (
-        <Browse playlist={createPlaylistObj(search.playlists, 'Playlists')} />
+      {!isEmpty(playlists) && (
+        <Browse playlist={createPlaylistObj(playlists, 'Playlists')} />
       )}
-      {!isEmpty(search.artists) && (
-        <Browse playlist={createPlaylistObj(search.artists, 'Artists')} />
+      {!isEmpty(artists) && (
+        <Browse playlist={createPlaylistObj(artists, 'Artists')} />
       )}
     </Layout>
   );
