@@ -13,7 +13,7 @@ import useAuth from 'src/hooks/useAuth';
 interface Props {
   playlist: PlaylistType;
   playlists: BrowsePlaylist;
-  error: number | null;
+  error: number;
 }
 
 const Profile: NextPage<Props> = ({
@@ -56,7 +56,7 @@ Profile.getInitialProps = async (context: NextPageContext): Promise<Props> => {
       title: '',
     },
   };
-  let error: number | null = null;
+  let error: number = 0;
 
   const getUser = () => axiosInstance(cookie.access_token).get('/me');
   const getUserPlaylists = () =>

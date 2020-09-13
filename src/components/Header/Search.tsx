@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
-import { useCookies } from 'react-cookie';
-import axios from 'src/axiosInstance';
+import axios from 'axios';
 import { useState, useCallback, useEffect } from 'react';
 import { debounce } from 'lodash';
 import { storeSearch } from 'src/store/Search/actions';
@@ -68,7 +67,6 @@ const Search: React.FC = (): JSX.Element => {
   );
   const { albums, tracks, playlists, artists } = search;
 
-  const [cookie] = useCookies(['access']);
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [componentMounted, setComponentMounted] = useState<boolean>(false);
@@ -76,7 +74,7 @@ const Search: React.FC = (): JSX.Element => {
   const handleChange = useCallback(
     debounce((e: React.ChangeEvent<HTMLInputElement>) => {
       if (!!e.target.value) {
-        axios(cookie.access.access_token)
+        axios
           .get(
             `/search?q=${e.target.value}&type=playlist,album,track,artist&limit=9`
           )
@@ -106,12 +104,8 @@ const Search: React.FC = (): JSX.Element => {
     []
   );
 
-  useEffect((): (() => void) => {
+  useEffect((): void => {
     setComponentMounted(true);
-    return () =>
-      dispatch(
-        storeSearch({ albums: [], artists: [], playlists: [], tracks: [] })
-      );
   }, []);
 
   return (

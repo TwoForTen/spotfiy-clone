@@ -4,8 +4,6 @@ import axiosInstance from 'src/axiosInstance';
 import axios from 'axios';
 import Layout from 'src/components/Layout';
 import useAuth from 'src/hooks/useAuth';
-import styled from 'styled-components';
-import { ThemeProp } from 'src/interfaces/ThemeProp';
 
 import HomepageBrowse from 'src/components/HomepageBrowse';
 import { TypeOfPlaylist } from 'src/interfaces/TypeOfPlaylist';
@@ -14,7 +12,7 @@ import { Cookie } from 'src/interfaces/Cookie';
 
 interface Props {
   browsePlaylists: BrowsePlaylist[];
-  error: number | null;
+  error: number;
 }
 
 export type BrowsePlaylist = {
@@ -92,7 +90,7 @@ SpotifyApp.getInitialProps = async (
   }
 
   const browsePlaylists: BrowsePlaylist[] = [];
-  let error: number | null = null;
+  let error: number = 0;
 
   const getCategoryPlaylists = () => {
     const promises = [];

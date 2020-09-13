@@ -4,7 +4,8 @@ import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useCookies } from 'react-cookie';
-import axios, { Options } from 'src/axiosInstance';
+import { Options } from 'src/axiosInstance';
+import axios from 'axios';
 import usePlayer from 'src/hooks/usePlayer';
 import useAuth from 'src/hooks/useAuth';
 import { GlobalState } from 'src/store';
@@ -320,7 +321,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
     (e: React.MouseEvent<HTMLInputElement>): void => {
       const target = e.target as HTMLInputElement;
       setTrackPosition(+target.value);
-      axios(cookie.access.access_token)
+      axios
         .put(
           `/me/player/seek?device_id=${deviceId}&position_ms=${target.value}`
         )
@@ -334,7 +335,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
     (e: React.MouseEvent<HTMLInputElement>): void => {
       const target = e.target as HTMLInputElement;
       setVolume(+target.value);
-      axios(cookie.access.access_token)
+      axios
         .put(
           `/me/player/volume?device_id=${deviceId}&volume_percent=${target.value}`
         )
@@ -352,7 +353,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
       return previousVolume;
     });
     const newVolume: number = volume > 0 ? 0 : previousVolume;
-    axios(cookie.access.access_token)
+    axios
       .put(
         `/me/player/volume?device_id=${deviceId}&volume_percent=${newVolume}`
       )
@@ -387,7 +388,7 @@ const FooterPlayer: React.FC = (): JSX.Element => {
           ) : (
             <TextSkeleton $width={150} />
           )}
-          {playingNow.artists.length > 0 ? (
+          {playingNow.artists?.length > 0 ? (
             <PlayerSmallText>
               {playingNow.artists.map((artist) => artist.name).join(', ')}
             </PlayerSmallText>

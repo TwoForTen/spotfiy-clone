@@ -11,6 +11,7 @@ import { Cookie } from 'src/interfaces/Cookie';
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
 import { useRouter } from 'next/router';
+import Auth from 'src/hoc/auth';
 
 import AppLayout from 'src/components/AppLayout';
 
@@ -42,19 +43,21 @@ const MyApp = ({
         <title>Spotify - Minimal Clone </title>
       </Head>
       <Provider store={store}>
-        <CookiesProvider>
-          <ThemeProvider theme={theme}>
-            <GlobalStyle />
-            {!!accessToken && router.pathname !== '/' && (
-              <AppLayout
-                username={username}
-                playlists={playlists}
-                accessToken={accessToken}
-              />
-            )}
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </CookiesProvider>
+        <Auth>
+          <CookiesProvider>
+            <ThemeProvider theme={theme}>
+              <GlobalStyle />
+              {!!accessToken && router.pathname !== '/' && (
+                <AppLayout
+                  username={username}
+                  playlists={playlists}
+                  accessToken={accessToken}
+                />
+              )}
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </CookiesProvider>
+        </Auth>
       </Provider>
     </>
   );

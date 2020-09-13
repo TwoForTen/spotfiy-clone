@@ -3,7 +3,7 @@ import Layout from 'src/components/Layout';
 import cookies from 'next-cookies';
 import axios from 'axios';
 import axiosInstance from 'src/axiosInstance';
-
+import useAuth from 'src/hooks/useAuth';
 import { Cookie } from 'src/interfaces/Cookie';
 import ArtistComponent from 'src/components/Artist';
 
@@ -11,6 +11,7 @@ interface Props {
   info: ArtistInfo;
   topTracks: any[];
   albums: ArtistAlbum[];
+  error: number;
 }
 
 export interface ArtistInfo {
@@ -31,7 +32,14 @@ export interface ArtistAlbum {
   imageUrl: string;
 }
 
-const Artist: NextPage<Props> = ({ info, topTracks, albums }): JSX.Element => {
+const Artist: NextPage<Props> = ({
+  info,
+  topTracks,
+  albums,
+  error,
+}): JSX.Element | null => {
+  useAuth(error);
+  if (error) return null;
   return (
     <Layout>
       <ArtistComponent topTracks={topTracks} info={info} albums={albums} />
@@ -54,8 +62,8 @@ Artist.getInitialProps = async (context: NextPageContext) => {
     uri: '',
   };
   let tracks: any[] = [];
-
   let albums: ArtistAlbum[] = [];
+  let error: number = 0;
 
   const getArtistInfo = () =>
     axiosInstance(cookie.access_token).get(`/artists/${context.query.artist}`);
@@ -99,9 +107,9 @@ Artist.getInitialProps = async (context: NextPageContext) => {
         ];
       })
     )
-    .catch((e) => console.log(e.response.data.error.message));
+    .catch((e) => (error = e.response.data.error.status));
 
-  return { info, topTracks: tracks, albums };
+  return { info, topTracks: tracks, albums, error };
 };
 
 export default Artist;

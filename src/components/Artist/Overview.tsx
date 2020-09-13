@@ -33,7 +33,7 @@ const Overview: React.FC<Props> = ({
       <Container>
         {!isEmpty(topTracks) && (
           <div>
-            <Title description={{ title: 'Popular' }} seeAll={false} />
+            <Title description={{ title: 'Popular' }} />
             {topTracks.map((track: any, index: number) => {
               return (
                 <Track
@@ -54,7 +54,7 @@ const Overview: React.FC<Props> = ({
           </div>
         )}
         <div style={{ margin: '25px 0' }}>
-          <Title description={{ title: 'Albums' }} seeAll={false} />
+          <Title description={{ title: 'Albums' }} />
           <AlbumsContainer>
             {albums
               .filter((album) => album.albumGroup === 'album')
@@ -62,7 +62,7 @@ const Overview: React.FC<Props> = ({
                 return <PlaylistCard key={album.id} album={album} />;
               })}
           </AlbumsContainer>
-          <Title description={{ title: 'Singles' }} seeAll={false} />
+          <Title description={{ title: 'Singles' }} />
           <AlbumsContainer>
             {albums
               .filter((album) => album.albumGroup === 'single')
@@ -70,7 +70,7 @@ const Overview: React.FC<Props> = ({
                 return <PlaylistCard key={album.id} album={album} />;
               })}
           </AlbumsContainer>
-          <Title description={{ title: 'Appears on' }} seeAll={false} />
+          <Title description={{ title: 'Appears on' }} />
           <AlbumsContainer>
             {albums
               .filter((album) => album.albumGroup === 'appears_on')

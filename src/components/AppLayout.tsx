@@ -44,12 +44,21 @@ const AppLayout: React.FC<Props> = ({
         // Error handling
         player.addListener('initialization_error', ({ message }: any) => {
           console.error(message);
+          player.removeListener('ready');
+          player.removeListener('player_state_changed');
+          player.removeListener('not_ready');
         });
         player.addListener('authentication_error', ({ message }: any) => {
           console.error(message);
+          player.removeListener('ready');
+          player.removeListener('player_state_changed');
+          player.removeListener('not_ready');
         });
         player.addListener('account_error', ({ message }: any) => {
           console.error(message);
+          player.removeListener('ready');
+          player.removeListener('player_state_changed');
+          player.removeListener('not_ready');
         });
         player.addListener('playback_error', ({ message }: any) => {
           console.error(message);
@@ -60,24 +69,24 @@ const AppLayout: React.FC<Props> = ({
           dispatch(
             storeTrack({
               context: {
-                description: state.context.metadata.context_description,
-                uri: state.context.uri,
-                id: state.context.uri?.split(':')[2] || '',
-                type: state.context.uri?.split(':')[1] || '',
+                description: state?.context.metadata.context_description,
+                uri: state?.context.uri,
+                id: state?.context.uri?.split(':')[2] || '',
+                type: state?.context.uri?.split(':')[1] || '',
               },
-              artists: state.track_window.current_track.artists,
-              duration: state.duration,
-              position: state.position,
+              artists: state?.track_window.current_track.artists,
+              duration: state?.duration,
+              position: state?.position,
               id:
-                state.track_window.current_track.linked_from.id ||
-                state.track_window.current_track.id,
-              imageUrl: state.track_window.current_track.album.images[0].url,
-              name: state.track_window.current_track.name,
-              paused: state.paused,
+                state?.track_window.current_track.linked_from.id ||
+                state?.track_window.current_track.id,
+              imageUrl: state?.track_window.current_track.album.images[0].url,
+              name: state?.track_window.current_track.name,
+              paused: state?.paused,
               nextTrack:
-                state.track_window.next_tracks.length > 0 ? true : false,
+                state?.track_window.next_tracks.length > 0 ? true : false,
               previousTrack:
-                state.track_window.previous_tracks.length > 0 ? true : false,
+                state?.track_window.previous_tracks.length > 0 ? true : false,
             })
           );
 

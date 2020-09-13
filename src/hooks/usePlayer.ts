@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
-import axios from 'src/axiosInstance';
+import axios from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { GlobalState } from 'src/store';
 import { DeviceState } from 'src/store/Device/types';
@@ -18,10 +18,14 @@ const usePlayer = (): ((options: AxiosRequestConfig) => void) => {
   useAuth(error);
 
   return (options: AxiosRequestConfig): void => {
-    axios(cookie.access.access_token)({
+    axios({
       url: options.url,
       method: options.method,
       data: options.data,
+      baseURL: 'https://api.spotify.com/v1',
+      headers: {
+        Authorization: `Bearer ${cookie.access.access_token}`,
+      },
       params: {
         device_id: deviceId,
       },

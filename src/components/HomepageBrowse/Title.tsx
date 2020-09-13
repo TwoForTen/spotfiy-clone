@@ -6,7 +6,6 @@ interface Props {
     title: string;
     description?: string;
   };
-  seeAll?: boolean;
 }
 
 const TracksTitleContainer = styled.div`
@@ -30,28 +29,13 @@ const Subtitle = styled.span`
   font-size: 13px;
 `;
 
-const SeeAll = styled.button`
-  background-color: transparent;
-  color: ${({ theme }: ThemeProp) => theme.colors.ui.text};
-  text-transform: uppercase;
-  font-weight: 400;
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const Title: React.FC<Props> = ({
-  description,
-  seeAll = true,
-}): JSX.Element => {
+const Title: React.FC<Props> = ({ description }): JSX.Element => {
   return (
     <TracksTitleContainer>
       <div>
         <BrowseTitle>{description.title.replace(/\_/g, ' ')}</BrowseTitle>
         <Subtitle>{description.description}</Subtitle>
       </div>
-      {seeAll && <SeeAll>See all</SeeAll>}
     </TracksTitleContainer>
   );
 };

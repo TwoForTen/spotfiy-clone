@@ -60,7 +60,10 @@ const Title = styled.a`
 const PlaylistCard: React.FC<Props> = ({ album }): JSX.Element => {
   return (
     <StyledPlaylistCard>
-      <Link href={`/app/album/${album.id}`}>
+      <Link
+        href={'/app/[playlistType]/[playlist]'}
+        as={`/app/album/${album.id}`}
+      >
         <a>
           <ImageContainer>
             <Image src={album.imageUrl} alt="" />
@@ -68,10 +71,16 @@ const PlaylistCard: React.FC<Props> = ({ album }): JSX.Element => {
         </a>
       </Link>
       <TitleContainer>
-        <Link href={`/app/album/${album.id}`}>
+        <Link
+          href={'/app/[playlistType]/[playlist]'}
+          as={`/app/album/${album.id}`}
+        >
           <Title>{album.name}</Title>
         </Link>
-        <Link href={`/app/artist/${album.artist.id}`}>
+        <Link
+          href={'/app/artist/[artist]'}
+          as={`/app/artist/${album.artist.id}`}
+        >
           <Title $type={TitleType.Album}>{album.artist.name}</Title>
         </Link>
       </TitleContainer>
