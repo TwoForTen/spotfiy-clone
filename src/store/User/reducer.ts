@@ -14,6 +14,11 @@ const userReducer = (state = initialState, action: UserActions): UserState => {
         username,
         playlists,
       };
+    case UserTypes.CLEAR_USER:
+      return {
+        username: '',
+        playlists: [],
+      };
     case UserTypes.UPDATE_PLAYLISTS:
       const { id, name } = action;
       if (state.playlists.some((playlist: UserPlaylist) => playlist.id === id))

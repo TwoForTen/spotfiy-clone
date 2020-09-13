@@ -24,6 +24,7 @@ export const GlobalStyle: GlobalStyleComponent<
     button{
       border: none;
       outline: none;
+      background-color: transparent;
     }
     a{
       color: initial;

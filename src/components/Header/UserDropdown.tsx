@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
-import { useCookies } from 'react-cookie';
-
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+import useLogout from 'src/hooks/useLogout';
+import { useRouter } from 'next/router';
 
 const StyledUserDropdown = styled.div`
   position: absolute;
@@ -33,19 +32,12 @@ const MenuLink = styled.li`
 
 const UserDropdown: React.FC = (): JSX.Element => {
   const router = useRouter();
-  const [, , removeCookie] = useCookies(['access']);
+  const logout = useLogout();
   return (
     <StyledUserDropdown>
       <ul>
         <MenuLink onClick={() => router.push('/app/user/me')}>Profile</MenuLink>
-        <MenuLink
-          onClick={() => {
-            removeCookie('access');
-            router.replace('/');
-          }}
-        >
-          Log out
-        </MenuLink>
+        <MenuLink onClick={() => logout()}>Log out</MenuLink>
       </ul>
     </StyledUserDropdown>
   );

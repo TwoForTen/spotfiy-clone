@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Options } from 'src/axiosInstance';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
+import { DeviceState } from 'src/store/Device/types';
 import { UserState } from 'src/store/User/types';
 import usePlayer from 'src/hooks/usePlayer';
 import { updatePlaylists } from 'src/store/User/actions';
@@ -47,6 +48,9 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
+  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
+    (state: GlobalState) => state.device.deviceId
+  );
   const followedPlaylists = useSelector<GlobalState, UserState['playlists']>(
     (state: GlobalState) => state.user.playlists
   );
@@ -82,6 +86,7 @@ const Playlist: React.FC<Props> = ({ playlist }): JSX.Element => {
       <Layout>
         <Header playlist={playlist} />
         <PlayButton
+          disabled={!deviceId}
           onClick={() => {
             if (!playingNow.paused && playingNow.context.uri === playlist.uri) {
               const { url, method } = PAUSE_PLAYING;

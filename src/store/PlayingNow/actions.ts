@@ -3,7 +3,7 @@ import {
   PlayingNowState,
   StoreTrack,
   UpdatePosition,
-  SetVolume,
+  ClearPlayingNow,
 } from './types';
 
 export const storeTrack = (payload: PlayingNowState): StoreTrack => {
@@ -20,9 +20,8 @@ export const updatePosition = (payload: number): UpdatePosition => {
   };
 };
 
-export const setVolume = (payload: number): SetVolume => {
+export const clearPlayingNow = (): ClearPlayingNow => {
   return {
-    type: PlayingNowTypes.SET_VOLUME,
-    value: payload,
+    type: PlayingNowTypes.CLEAR_PLAYING_NOW,
   };
 };

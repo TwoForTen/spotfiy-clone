@@ -8,6 +8,7 @@ import { Options } from 'src/axiosInstance';
 import usePlayer from 'src/hooks/usePlayer';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
+import { DeviceState } from 'src/store/Device/types';
 
 import playingGif from 'src/assets/playingGif.gif';
 
@@ -116,6 +117,9 @@ const Track: React.FC<Props> = ({
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
+  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
+    (state: GlobalState) => state.device.deviceId
+  );
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
   const [trackHovered, setTrackHovered] = useState<boolean>(false);
 
@@ -148,7 +152,7 @@ const Track: React.FC<Props> = ({
       {playingNow.id === track.id &&
       (trackHovered || trackSelected === index) &&
       !playingNow.paused ? (
-        <span
+        <button
           onClick={() => {
             const { url, method } = PAUSE_TRACK;
             player({ url, method });
@@ -163,7 +167,7 @@ const Track: React.FC<Props> = ({
             <path d="M0 0h24v24H0z" fill="none" />
             <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="white" />
           </svg>
-        </span>
+        </button>
       ) : playingNow.id === track.id && !playingNow.paused ? (
         <img
           style={{ margin: '0 auto', position: 'relative' }}
@@ -173,7 +177,8 @@ const Track: React.FC<Props> = ({
           height={14}
         />
       ) : trackHovered || trackSelected === index ? (
-        <span
+        <button
+          disabled={!deviceId}
           onClick={() => {
             const {
               url,
@@ -206,7 +211,7 @@ const Track: React.FC<Props> = ({
             <path d="M0 0h24v24H0z" fill="none" />
             <path d="M8 5v14l11-7z" fill="white" />
           </svg>
-        </span>
+        </button>
       ) : (
         <TrackInfo
           $trackSelected={trackSelected}

@@ -31,6 +31,8 @@ const playingNowReducer = (
         ...state,
         position: action.position,
       };
+    case PlayingNowTypes.CLEAR_PLAYING_NOW:
+      return initialState;
     default:
       return state;
   }

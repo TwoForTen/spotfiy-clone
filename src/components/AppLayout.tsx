@@ -7,11 +7,8 @@ import { UserPlaylist } from 'src/pages/_app';
 import { useDispatch } from 'react-redux';
 import { storeUser } from 'src/store/User/actions';
 import { storeDeviceId } from 'src/store/Device/actions';
-import {
-  storeTrack,
-  updatePosition,
-  setVolume,
-} from 'src/store/PlayingNow/actions';
+import { storeTrack, updatePosition } from 'src/store/PlayingNow/actions';
+import useLogout from 'src/hooks/useLogout';
 
 type Props = {
   username: string;
@@ -25,7 +22,7 @@ const AppLayout: React.FC<Props> = ({
   accessToken,
 }): JSX.Element => {
   const dispatch = useDispatch();
-
+  const logout = useLogout();
   useEffect(() => {
     dispatch(storeUser({ username, playlists }));
   }, [username, playlists]);
@@ -48,6 +45,7 @@ const AppLayout: React.FC<Props> = ({
           player.removeListener('player_state_changed');
           player.removeListener('not_ready');
           player.disconnect();
+          logout();
         });
         player.addListener('authentication_error', ({ message }: any) => {
           console.error(message);
@@ -55,6 +53,7 @@ const AppLayout: React.FC<Props> = ({
           player.removeListener('player_state_changed');
           player.removeListener('not_ready');
           player.disconnect();
+          logout();
         });
         player.addListener('account_error', ({ message }: any) => {
           console.error(message);
@@ -62,10 +61,12 @@ const AppLayout: React.FC<Props> = ({
           player.removeListener('player_state_changed');
           player.removeListener('not_ready');
           player.disconnect();
+          logout();
         });
         player.addListener('playback_error', ({ message }: any) => {
           console.error(message);
           player.disconnect();
+          logout();
         });
 
         // Playback status updates
@@ -99,11 +100,6 @@ const AppLayout: React.FC<Props> = ({
               dispatch(updatePosition(positionState.position));
             }
           });
-        });
-
-        // Get Initial Volume
-        player.getVolume().then((volume: number) => {
-          dispatch(setVolume(volume));
         });
 
         // Ready

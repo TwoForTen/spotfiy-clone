@@ -4,6 +4,7 @@ import { ThemeProp } from 'src/interfaces/ThemeProp';
 import { useSelector } from 'react-redux';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
+import { DeviceState } from 'src/store/Device/types';
 import usePlayer from 'src/hooks/usePlayer';
 import { Options } from 'src/axiosInstance';
 
@@ -112,6 +113,9 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
   );
+  const deviceId = useSelector<GlobalState, DeviceState['deviceId']>(
+    (state: GlobalState) => state.device.deviceId
+  );
 
   const PAUSE_PLAYING: Options = {
     url: '/me/player/pause',
@@ -147,6 +151,7 @@ const Card: React.FC<Props> = ({ data }): JSX.Element => {
         <Description>{data.description}</Description>
       </DescriptionContainer>
       <PlayButton
+        disabled={!deviceId}
         $playingNow={playingNow.context.uri === data.uri}
         onClick={(e) => {
           e.stopPropagation();

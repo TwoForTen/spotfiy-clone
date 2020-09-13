@@ -13,10 +13,6 @@ const deviceReducer = (
       return {
         deviceId: action.deviceId,
       };
-    // case DeviceTypes.CLEAR_DEVICE_ID:
-    //   return {
-    //     deviceId: '',
-    //   };
     default:
       return state;
   }

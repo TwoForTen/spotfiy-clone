@@ -1,7 +1,7 @@
 export enum PlayingNowTypes {
   STORE_TRACK = 'STORE_TRACK',
   UPDATE_POSITION = 'UPDATE_POSITION',
-  SET_VOLUME = 'SET_VOLUME',
+  CLEAR_PLAYING_NOW = 'CLEAR_PLAYING_NOW',
 }
 
 export interface PlayingNowState {
@@ -33,9 +33,8 @@ export interface UpdatePosition {
   position: number;
 }
 
-export interface SetVolume {
-  type: PlayingNowTypes.SET_VOLUME;
-  value: number;
+export interface ClearPlayingNow {
+  type: PlayingNowTypes.CLEAR_PLAYING_NOW;
 }
 
-export type PlayingNowActions = StoreTrack | UpdatePosition | SetVolume;
+export type PlayingNowActions = StoreTrack | UpdatePosition | ClearPlayingNow;
