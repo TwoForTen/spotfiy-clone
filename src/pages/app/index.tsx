@@ -12,7 +12,7 @@ import { Cookie } from 'src/interfaces/Cookie';
 
 interface Props {
   browsePlaylists: BrowsePlaylist[];
-  error: number;
+  error: number | null;
 }
 
 export type BrowsePlaylist = {
@@ -90,7 +90,7 @@ SpotifyApp.getInitialProps = async (
   }
 
   const browsePlaylists: BrowsePlaylist[] = [];
-  let error: number = 0;
+  let error: number | null = null;
 
   const getCategoryPlaylists = () => {
     const promises = [];

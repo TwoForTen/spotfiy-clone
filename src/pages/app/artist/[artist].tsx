@@ -11,7 +11,7 @@ interface Props {
   info: ArtistInfo;
   topTracks: any[];
   albums: ArtistAlbum[];
-  error: number;
+  error: number | null;
 }
 
 export interface ArtistInfo {
@@ -63,7 +63,7 @@ Artist.getInitialProps = async (context: NextPageContext) => {
   };
   let tracks: any[] = [];
   let albums: ArtistAlbum[] = [];
-  let error: number = 0;
+  let error: number | null = null;
 
   const getArtistInfo = () =>
     axiosInstance(cookie.access_token).get(`/artists/${context.query.artist}`);

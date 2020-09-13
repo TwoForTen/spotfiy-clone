@@ -9,7 +9,7 @@ export interface Options {
   position?: number;
 }
 
-const axiosInstance = (access_token?: string): AxiosInstance =>
+const axiosInstance = (access_token: string): AxiosInstance =>
   axios.create({
     baseURL: 'https://api.spotify.com/v1',
     headers: {

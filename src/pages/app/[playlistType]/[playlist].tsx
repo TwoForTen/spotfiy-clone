@@ -23,7 +23,7 @@ export type PlaylistType = {
 
 interface Props {
   playlist: PlaylistType;
-  error: number;
+  error: number | null;
 }
 
 const Playlist: NextPage<Props> = ({ playlist, error }): JSX.Element | null => {
@@ -50,7 +50,7 @@ Playlist.getInitialProps = async (context: NextPageContext): Promise<Props> => {
     type: undefined,
     uri: '',
   };
-  let error: number = 0;
+  let error: number | null = null;
 
   try {
     if (
