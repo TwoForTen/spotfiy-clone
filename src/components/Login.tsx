@@ -1,5 +1,4 @@
-import styled, { DefaultTheme } from 'styled-components';
-import Button from 'src/components/StyledButton';
+import styled, { DefaultTheme, css } from 'styled-components';
 
 interface ThemeProp {
   theme: DefaultTheme;
@@ -32,6 +31,26 @@ const Title = styled.h2`
   z-index: 1;
 `;
 
+const Button = styled.button`
+  ${({ theme }: ThemeProp) => css`
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin: 20px;
+    min-width: 120px;
+    color: ${theme.colors.common.white};
+    font-size: 20px;
+    border-radius: ${theme.shape.borderRadius};
+    background-color: ${theme.colors.primary.main}
+    transition: 300ms;
+    z-index: 1;
+    &:hover {
+      cursor: pointer;
+      background-color: theme.colors.primary.lighten;
+    }
+  `}
+`;
+
 const Login: React.FC = (): JSX.Element => {
   return (
     <Background>
@@ -40,7 +59,7 @@ const Login: React.FC = (): JSX.Element => {
         style={{ zIndex: 1 }}
         href="https://accounts.spotify.com/authorize?client_id=e201e606a545454ebf802153eee4e83d&redirect_uri=http://localhost:3000&scope=user-read-private%20user-read-email%20user-top-read%20user-modify-playback-state%20playlist-modify-public%20playlist-modify-private%20user-read-playback-state%20streaming&response_type=code&state=129873"
       >
-        <Button primary>Login</Button>
+        <Button>Login</Button>
       </a>
     </Background>
   );
