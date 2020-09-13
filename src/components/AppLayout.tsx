@@ -47,21 +47,25 @@ const AppLayout: React.FC<Props> = ({
           player.removeListener('ready');
           player.removeListener('player_state_changed');
           player.removeListener('not_ready');
+          player.disconnect();
         });
         player.addListener('authentication_error', ({ message }: any) => {
           console.error(message);
           player.removeListener('ready');
           player.removeListener('player_state_changed');
           player.removeListener('not_ready');
+          player.disconnect();
         });
         player.addListener('account_error', ({ message }: any) => {
           console.error(message);
           player.removeListener('ready');
           player.removeListener('player_state_changed');
           player.removeListener('not_ready');
+          player.disconnect();
         });
         player.addListener('playback_error', ({ message }: any) => {
           console.error(message);
+          player.disconnect();
         });
 
         // Playback status updates
