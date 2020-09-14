@@ -26,11 +26,6 @@ const playingNowReducer = (
   switch (action.type) {
     case PlayingNowTypes.STORE_TRACK:
       return action.playingNow;
-    case PlayingNowTypes.UPDATE_POSITION:
-      return {
-        ...state,
-        position: action.position,
-      };
     case PlayingNowTypes.CLEAR_PLAYING_NOW:
       return initialState;
     default:

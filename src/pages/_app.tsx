@@ -11,7 +11,7 @@ import { Cookie } from 'src/interfaces/Cookie';
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
 import { useRouter } from 'next/router';
-
+import ScrollToTop from 'src/hoc/ScrollToTop';
 import AppLayout from 'src/components/AppLayout';
 
 type InitialProps = {
@@ -52,7 +52,9 @@ const MyApp = ({
                 accessToken={accessToken}
               />
             )}
-            <Component {...pageProps} />
+            <ScrollToTop>
+              <Component {...pageProps} />
+            </ScrollToTop>
           </ThemeProvider>
         </CookiesProvider>
       </Provider>

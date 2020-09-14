@@ -28,13 +28,8 @@ export interface StoreTrack {
   playingNow: PlayingNowState;
 }
 
-export interface UpdatePosition {
-  type: PlayingNowTypes.UPDATE_POSITION;
-  position: number;
-}
-
 export interface ClearPlayingNow {
   type: PlayingNowTypes.CLEAR_PLAYING_NOW;
 }
 
-export type PlayingNowActions = StoreTrack | UpdatePosition | ClearPlayingNow;
+export type PlayingNowActions = StoreTrack | ClearPlayingNow;

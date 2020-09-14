@@ -4,11 +4,15 @@ import Header from 'src/components/Header';
 import Sidebar from 'src/components/Sidebar';
 import FooterPlayer from 'src/components/Player';
 import { UserPlaylist } from 'src/pages/_app';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { storeUser } from 'src/store/User/actions';
 import { storeDeviceId } from 'src/store/Device/actions';
-import { storeTrack, updatePosition } from 'src/store/PlayingNow/actions';
+import { storeTrack } from 'src/store/PlayingNow/actions';
 import useLogout from 'src/hooks/useLogout';
+import Head from 'next/head';
+import { GlobalState } from 'src/store';
+import { PlayingNowState } from 'src/store/PlayingNow/types';
+import { isEmpty } from 'lodash';
 
 type Props = {
   username: string;
@@ -23,6 +27,9 @@ const AppLayout: React.FC<Props> = ({
 }): JSX.Element => {
   const dispatch = useDispatch();
   const logout = useLogout();
+  const playingNow = useSelector<GlobalState, PlayingNowState>(
+    (state: GlobalState) => state.playingNow
+  );
 
   useEffect(() => {
     dispatch(storeUser({ username, playlists }));
@@ -95,12 +102,6 @@ const AppLayout: React.FC<Props> = ({
                 state?.track_window.previous_tracks.length > 0 ? true : false,
             })
           );
-
-          player.getCurrentState().then((positionState: any) => {
-            if (positionState) {
-              dispatch(updatePosition(positionState.position));
-            }
-          });
         });
 
         // Ready
@@ -121,6 +122,13 @@ const AppLayout: React.FC<Props> = ({
   }, []);
   return (
     <>
+      {playingNow.name !== '' && !isEmpty(playingNow.artists) && (
+        <Head>
+          <title>{`${playingNow.name} - ${playingNow.artists
+            .map((artist: any) => artist.name)
+            .join(', ')}`}</title>
+        </Head>
+      )}
       <Header />
       <Sidebar />
       <FooterPlayer />
