@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 module.exports = {
   webpack(config) {
     config.module.rules.push(
@@ -22,8 +20,5 @@ module.exports = {
     );
 
     return config;
-  },
-  env: {
-    NEXT_PUBLIC_CALLBACK_URL: process.env.NEXT_PUBLIC_CALLBACK_URL,
   },
 };
