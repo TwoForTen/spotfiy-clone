@@ -107,12 +107,6 @@ const AppLayout: React.FC<Props> = ({
         // Ready
         player.addListener('ready', ({ device_id }: any) => {
           dispatch(storeDeviceId({ deviceId: device_id }));
-          console.log('Ready with Device ID', device_id);
-        });
-
-        // Not Ready
-        player.addListener('not_ready', ({ device_id }: any) => {
-          console.log('Device ID has gone offline', device_id);
         });
 
         // Connect to the player!
