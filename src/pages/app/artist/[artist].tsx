@@ -10,6 +10,7 @@ import ArtistComponent from 'src/components/Artist';
 interface Props {
   info: ArtistInfo;
   topTracks: any[];
+  artists: any[];
   albums: ArtistAlbum[];
   error: number | null;
 }
@@ -36,13 +37,19 @@ const Artist: NextPage<Props> = ({
   info,
   topTracks,
   albums,
+  artists,
   error,
 }): JSX.Element | null => {
   useAuth(error);
   if (error) return null;
   return (
     <Layout>
-      <ArtistComponent topTracks={topTracks} info={info} albums={albums} />
+      <ArtistComponent
+        topTracks={topTracks}
+        info={info}
+        albums={albums}
+        artists={artists}
+      />
     </Layout>
   );
 };
@@ -63,6 +70,7 @@ Artist.getInitialProps = async (context: NextPageContext) => {
   };
   let tracks: any[] = [];
   let albums: ArtistAlbum[] = [];
+  let artists: any[] = [];
   let error: number | null = null;
 
   const getArtistInfo = () =>
@@ -78,10 +86,15 @@ Artist.getInitialProps = async (context: NextPageContext) => {
       `/artists/${context.query.artist}/albums?limit=50`
     );
 
+  const getRelatedArtists = () =>
+    axiosInstance(cookie.access_token).get(
+      `https://api.spotify.com/v1/artists/${context.query.artist}/related-artists`
+    );
+
   await axios
-    .all([getArtistInfo(), getTopTracks(), getAlbums()])
+    .all([getArtistInfo(), getTopTracks(), getAlbums(), getRelatedArtists()])
     .then(
-      axios.spread((artistInfo, topTracks, artistAlbums) => {
+      axios.spread((artistInfo, topTracks, artistAlbums, relatedArtists) => {
         info = {
           id: artistInfo.data.id,
           name: artistInfo.data.name,
@@ -92,6 +105,8 @@ Artist.getInitialProps = async (context: NextPageContext) => {
         };
 
         tracks = topTracks.data.tracks;
+
+        artists = relatedArtists.data.artists;
 
         albums = [
           ...artistAlbums.data.items.map((item: any) => {
@@ -109,7 +124,7 @@ Artist.getInitialProps = async (context: NextPageContext) => {
     )
     .catch((e) => (error = e.response.data.error.status));
 
-  return { info, topTracks: tracks, albums, error };
+  return { info, topTracks: tracks, albums, artists, error };
 };
 
 export default Artist;

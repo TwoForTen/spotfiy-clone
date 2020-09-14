@@ -11,7 +11,6 @@ import { Cookie } from 'src/interfaces/Cookie';
 import { GlobalStyle } from '../styles';
 import { theme } from '../styles/theme';
 import { useRouter } from 'next/router';
-// import Auth from 'src/hoc/Auth';
 
 import AppLayout from 'src/components/AppLayout';
 

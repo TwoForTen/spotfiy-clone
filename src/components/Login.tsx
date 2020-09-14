@@ -41,12 +41,12 @@ const Button = styled.button`
     color: ${theme.colors.common.white};
     font-size: 20px;
     border-radius: ${theme.shape.borderRadius};
-    background-color: ${theme.colors.primary.main}
+    background-color: ${theme.colors.primary.main};
     transition: 300ms;
     z-index: 1;
     &:hover {
       cursor: pointer;
-      background-color: theme.colors.primary.lighten;
+      background-color: ${theme.colors.primary.lighten};
     }
   `}
 `;

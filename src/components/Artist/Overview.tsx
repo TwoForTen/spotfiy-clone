@@ -11,16 +11,15 @@ interface Props {
   playlistUri: string[];
   albums: ArtistAlbum[];
 }
+const Container = styled.div`
+  margin: 35px;
+`;
 
 const AlbumsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 35px;
-  &:after {
-    content: '';
-    flex-basis: 620px;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-gap: 10px;
+  margin: 30px 0;
 `;
 
 const Overview: React.FC<Props> = ({
@@ -30,56 +29,54 @@ const Overview: React.FC<Props> = ({
 }): JSX.Element => {
   const [trackSelected, setTrackSelected] = useState<number>(-1);
   return (
-    <>
-      <div style={{ margin: 35 }}>
-        {!isEmpty(topTracks) && (
-          <div>
-            <Title description={{ title: 'Popular' }} />
-            {topTracks.map((track: any, index: number) => {
-              return (
-                <Track
-                  key={track.id}
-                  onClick={() =>
-                    trackSelected !== index + 1
-                      ? setTrackSelected(index + 1)
-                      : setTrackSelected(-1)
-                  }
-                  track={track}
-                  trackSelected={trackSelected}
-                  index={index + 1}
-                  type={'track'}
-                  trackUri={[...playlistUri]}
-                ></Track>
-              );
-            })}
-          </div>
-        )}
-      </div>
+    <Container>
+      {!isEmpty(topTracks) && (
+        <div style={{ margin: '30px 0' }}>
+          <Title description={{ title: 'Popular' }} />
+          {topTracks.map((track: any, index: number) => {
+            return (
+              <Track
+                key={track.id}
+                onClick={() =>
+                  trackSelected !== index + 1
+                    ? setTrackSelected(index + 1)
+                    : setTrackSelected(-1)
+                }
+                track={track}
+                trackSelected={trackSelected}
+                index={index + 1}
+                type={'track'}
+                trackUri={[...playlistUri]}
+              ></Track>
+            );
+          })}
+        </div>
+      )}
+      <Title description={{ title: 'Albums' }} />
       <AlbumsContainer>
-        <Title description={{ title: 'Albums' }} />
         {albums
           .filter((album) => album.albumGroup === 'album')
           .map((album: any) => {
             return <PlaylistCard key={album.id} album={album} />;
           })}
       </AlbumsContainer>
+      <Title description={{ title: 'Singles' }} />
       <AlbumsContainer>
-        <Title description={{ title: 'Singles' }} />
         {albums
           .filter((album) => album.albumGroup === 'single')
           .map((album: any) => {
             return <PlaylistCard key={album.id} album={album} />;
           })}
       </AlbumsContainer>
+      <Title description={{ title: 'Appears on' }} />
       <AlbumsContainer>
-        <Title description={{ title: 'Appears on' }} />
         {albums
           .filter((album) => album.albumGroup === 'appears_on')
           .map((album: any) => {
             return <PlaylistCard key={album.id} album={album} />;
           })}
       </AlbumsContainer>
-    </>
+    </Container>
   );
 };
 

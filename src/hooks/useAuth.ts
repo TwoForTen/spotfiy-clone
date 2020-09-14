@@ -1,10 +1,20 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useLogout from 'src/hooks/useLogout';
+import axios from 'axios';
 
 const useAuth = (error: number | null): void => {
   const router = useRouter();
   const logout = useLogout();
+  const res = axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (err) => {
+      error = err.response.data.error.status;
+    }
+  );
+
   useEffect(() => {
     if (error) {
       switch (error) {
@@ -20,7 +30,11 @@ const useAuth = (error: number | null): void => {
           break;
       }
     }
-  }, [error]);
+
+    return () => {
+      axios.interceptors.response.eject(res);
+    };
+  }, [error, res]);
 };
 
 export default useAuth;

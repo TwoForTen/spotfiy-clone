@@ -8,10 +8,13 @@ import { Options } from 'src/axiosInstance';
 import { GlobalState } from 'src/store';
 import { PlayingNowState } from 'src/store/PlayingNow/types';
 import Overview from './Overview';
+import RelatedArtists from './RelatedArtists';
+import { useState, useEffect } from 'react';
 
 interface Props {
   info: ArtistInfo;
-  topTracks: any;
+  topTracks: any[];
+  artists: any[];
   albums: ArtistAlbum[];
 }
 
@@ -53,8 +56,11 @@ const ArtistComponent: React.FC<Props> = ({
   info,
   topTracks,
   albums,
+  artists,
 }): JSX.Element => {
   const player = usePlayer();
+
+  const [tabIndex, setTabIndex] = useState<number>(0);
 
   const playingNow = useSelector<GlobalState, PlayingNowState>(
     (state: GlobalState) => state.playingNow
@@ -74,6 +80,11 @@ const ArtistComponent: React.FC<Props> = ({
     method: 'put',
     position_ms: playingNow.position,
   };
+
+  useEffect(() => {
+    setTabIndex(0);
+  }, [info]);
+
   return (
     <>
       <Header info={info} />
@@ -114,14 +125,22 @@ const ArtistComponent: React.FC<Props> = ({
         )}
       </PlayButton>
       <ArtistTabs>
-        <TabButton $selected>Overview</TabButton>
-        <TabButton>Related</TabButton>
+        <TabButton $selected={tabIndex === 0} onClick={() => setTabIndex(0)}>
+          Overview
+        </TabButton>
+        <TabButton $selected={tabIndex === 1} onClick={() => setTabIndex(1)}>
+          Related
+        </TabButton>
       </ArtistTabs>
-      <Overview
-        topTracks={topTracks}
-        playlistUri={topTracks.map((track: any) => track.uri)}
-        albums={albums}
-      />
+      {tabIndex === 0 ? (
+        <Overview
+          topTracks={topTracks}
+          playlistUri={topTracks.map((track: any) => track.uri)}
+          albums={albums}
+        />
+      ) : (
+        tabIndex === 1 && <RelatedArtists artists={artists} />
+      )}
     </>
   );
 };
