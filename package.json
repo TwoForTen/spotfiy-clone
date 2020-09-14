@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p $PORT",
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {
     "@types/lodash": "^4.14.161",
