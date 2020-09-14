@@ -1,4 +1,5 @@
 import { combineReducers, createStore, compose } from 'redux';
+import undoable, { StateWithHistory } from 'redux-undo';
 import deviceReducer from './Device/reducer';
 import { DeviceState } from './Device/types';
 
@@ -10,6 +11,9 @@ import { UserState } from './User/types';
 
 import searchReducer from './Search/reducer';
 import { SearchState } from './Search/types';
+
+import historyReducer from './History/reducer';
+import { HistoryState } from './History/types';
 
 declare global {
   interface Window {
@@ -27,6 +31,7 @@ export interface GlobalState {
   playingNow: PlayingNowState;
   user: UserState;
   search: SearchState;
+  history: StateWithHistory<HistoryState>;
 }
 
 const reducers = combineReducers({
@@ -34,6 +39,7 @@ const reducers = combineReducers({
   playingNow: playingNowReducer,
   user: userReducer,
   search: searchReducer,
+  history: undoable(historyReducer, { ignoreInitialState: true }),
 });
 
 const store = createStore(reducers, composeEnhancers());

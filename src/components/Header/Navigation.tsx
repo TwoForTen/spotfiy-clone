@@ -1,6 +1,15 @@
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 import { ThemeProp } from 'src/interfaces/ThemeProp';
+import { useSelector, useDispatch } from 'react-redux';
+import { GlobalState } from 'src/store';
+import { ActionCreators } from 'redux-undo';
+import { storeUrl } from 'src/store/History/actions';
+
+interface StyleProps {
+  disabled: boolean;
+}
 
 const StyledNavigation = styled.div`
   display: flex;
@@ -16,17 +25,44 @@ const StyledHeaderButton = styled.button`
   justify-content: center;
   border-radius: 50%;
   background-color: ${({ theme }: ThemeProp) => theme.colors.common.black};
+  cursor: ${({ disabled }: StyleProps) => disabled && 'not-allowed'};
+  & > svg {
+    fill: ${({ disabled }: StyleProps) =>
+      disabled ? 'rgba(255,255,255,0.6)' : '#fff'};
+  }
 `;
 
 const Navigation: React.FC = (): JSX.Element => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const history = useSelector((state: GlobalState) => state.history);
+  const [active, setActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    !active && dispatch(storeUrl({ href: router.pathname, as: router.asPath }));
+    setActive(false);
+  }, [router.asPath]);
+
+  useEffect(() => {
+    dispatch(ActionCreators.clearHistory());
+  }, []);
+
   return (
     <StyledNavigation>
-      <StyledHeaderButton>
+      <StyledHeaderButton
+        disabled={history.past.length < 1}
+        onClick={() => {
+          setActive(true);
+          dispatch(ActionCreators.undo());
+          router.push(
+            history.past[history.past.length - 1].href,
+            history.past[history.past.length - 1].as
+          );
+        }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          fill="white"
           width="30px"
           height="30px"
         >
@@ -34,11 +70,21 @@ const Navigation: React.FC = (): JSX.Element => {
           <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
         </svg>
       </StyledHeaderButton>
-      <StyledHeaderButton style={{ marginLeft: '14px' }}>
+      <StyledHeaderButton
+        style={{ marginLeft: '14px' }}
+        disabled={history.future.length < 1}
+        onClick={() => {
+          setActive(true);
+          dispatch(ActionCreators.redo());
+          router.push(
+            history.future[history.future.length - 1].href,
+            history.future[history.future.length - 1].as
+          );
+        }}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          fill="white"
           width="30px"
           height="30px"
         >

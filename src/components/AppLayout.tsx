@@ -23,9 +23,10 @@ const AppLayout: React.FC<Props> = ({
 }): JSX.Element => {
   const dispatch = useDispatch();
   const logout = useLogout();
+
   useEffect(() => {
     dispatch(storeUser({ username, playlists }));
-  }, [username, playlists]);
+  }, [username]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
