@@ -15,16 +15,16 @@ import { SearchState } from './Search/types';
 import historyReducer from './History/reducer';
 import { HistoryState } from './History/types';
 
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
+// declare global {
+//   interface Window {
+//     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+//   }
+// }
 
-const composeEnhancers =
-  (typeof window !== 'undefined' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
+// const composeEnhancers =
+//   (typeof window !== 'undefined' &&
+//     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+//   compose;
 
 export interface GlobalState {
   device: DeviceState;
@@ -42,6 +42,6 @@ const reducers = combineReducers({
   history: undoable(historyReducer, { ignoreInitialState: true }),
 });
 
-const store = createStore(reducers, composeEnhancers());
+const store = createStore(reducers);
 
 export default store;
