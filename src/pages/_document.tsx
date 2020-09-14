@@ -7,16 +7,30 @@ interface Props {
 }
 
 export default class MyDocument extends Document<Props> {
-  static getInitialProps({ renderPage }: any) {
+  static async getInitialProps(ctx: any) {
     const sheet = new ServerStyleSheet();
+    const originalRenderPage = ctx.renderPage;
 
-    const page = renderPage((App: React.FC) => (props: ReactElement) =>
-      sheet.collectStyles(<App {...props} />)
-    );
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App: any) => (props: any) =>
+            sheet.collectStyles(<App {...props} />),
+        });
 
-    const styleTags = sheet.getStyleElement();
-
-    return { ...page, styleTags };
+      const initialProps = await Document.getInitialProps(ctx);
+      return {
+        ...initialProps,
+        styles: (
+          <>
+            {initialProps.styles}
+            {sheet.getStyleElement()}
+          </>
+        ),
+      };
+    } finally {
+      sheet.seal();
+    }
   }
 
   render() {
