@@ -57,7 +57,7 @@ Home.getInitialProps = async (
         querystring.stringify({
           grant_type: 'authorization_code',
           code: context.query.code,
-          redirect_uri: 'http://localhost:3000',
+          redirect_uri: process.env.REACT_APP_CALLBACK_URL,
         }),
         {
           headers: {
