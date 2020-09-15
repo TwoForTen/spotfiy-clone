@@ -22,6 +22,7 @@
     "polished": "^3.6.5",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
+    "react-device-detect": "^1.13.1",
     "react-dom": "^16.13.1",
     "react-load-script": "^0.0.6",
     "react-redux": "^7.2.1",

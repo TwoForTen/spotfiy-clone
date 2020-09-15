@@ -13,6 +13,8 @@ import { theme } from '../styles/theme';
 import { useRouter } from 'next/router';
 import ScrollToTop from 'src/hoc/ScrollToTop';
 import AppLayout from 'src/components/AppLayout';
+import { BrowserView, MobileView } from 'react-device-detect';
+import MobileSupportMessage from 'src/components/MobileSupportMessage';
 
 type InitialProps = {
   username: string;
@@ -45,16 +47,21 @@ const MyApp = ({
         <CookiesProvider>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
-            {!!accessToken && router.pathname !== '/' && (
-              <AppLayout
-                username={username}
-                playlists={playlists}
-                accessToken={accessToken}
-              />
-            )}
-            <ScrollToTop>
-              <Component {...pageProps} />
-            </ScrollToTop>
+            <BrowserView>
+              {!!accessToken && router.pathname !== '/' && (
+                <AppLayout
+                  username={username}
+                  playlists={playlists}
+                  accessToken={accessToken}
+                />
+              )}
+              <ScrollToTop>
+                <Component {...pageProps} />
+              </ScrollToTop>
+            </BrowserView>
+            <MobileView>
+              <MobileSupportMessage />
+            </MobileView>
           </ThemeProvider>
         </CookiesProvider>
       </Provider>
