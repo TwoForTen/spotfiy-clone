@@ -47,6 +47,9 @@ const MyApp = ({
         <CookiesProvider>
           <ThemeProvider theme={theme}>
             <GlobalStyle />
+            <MobileView>
+              <MobileSupportMessage />
+            </MobileView>
             <BrowserView>
               {!!accessToken && router.pathname !== '/' && (
                 <AppLayout
@@ -59,9 +62,6 @@ const MyApp = ({
                 <Component {...pageProps} />
               </ScrollToTop>
             </BrowserView>
-            <MobileView>
-              <MobileSupportMessage />
-            </MobileView>
           </ThemeProvider>
         </CookiesProvider>
       </Provider>
